@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Contact</title>
+  </head>
+  <body>
+    {% extends "base.html" %}
+    {% block content %}
+    <div class="container-fluid very-dark-text">
+      <div class="container">
+      <div class="row">
+        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+          <div class="very-dark-text jumbotron">
+            <p class="lead">If you have any query or suggestion then please write to us.</p>
+            <hr class="my-4 brand-background">
+            <p><span style="font-weight:bold;">Simon Kelow</span>: simon.kelow@gmail.com<br>
+              <span style="font-weight:bold;">Jared Adolf-Bryfogle</span>: Jared's email<br>
+              <span style="font-weight:bold;">Vivek Modi</span>: vivek.modi@fccc.edu<br>
+            <span style="font-weight:bold;">Roland Dunbrack</span>: roland.dunbrack@fccc.edu<br>
+            <a href="{{ url_for('dunbrackLab') }}" target="_blank">Lab Home Page</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+  </body>
+</html>

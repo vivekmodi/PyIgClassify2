@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Home</title>
+  </head>
+
+  <body>
+    {% extends "base.html" %}
+    {% block jumbo %}
+    <div class="container-fluid dark-background light-text" style="padding:20px;">
+        <div class="jumbotron light-pink-background">
+          <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+              <img src="static/img/Tree-transparent.png" width="90%;" height="85%;">
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 ">
+              <h1 class="display-4" style="text-align:center;">PyIgClassify</h1>
+              <p class="lead" style="text-align:center;">Antibody Resource</p>
+              <hr class="my-4">
+              <p class="light-text" style="text-align:center;">A web resource for antibody conformational clusters and nomenclature.</p>
+            </div>
+           <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+              <img src="static/img/EGFR-superposition-transparent.png" width="90%;" height="85%;" >
+            </div>
+          </div>
+        </div>
+<div class="jumbotron" style="background-color:white;">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="row">
+                <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                  <div class="jumbotron-fluid dark-text"  style="margin:25px;text-align:center;">
+                    <h6><h4 style="display:inline;">Scan</h4> all the antibody chains in one table</h6>
+                    <hr class="my-8 brand-background" style="border-width: 2px;">
+
+                    <a class="btn button-primary" style="color:white;" href="{{ url_for('browse') }}" target="_blank" role="button">Browse</a>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                  <div class="jumbotron-fluid dark-text" style="margin:25px;text-align:center;">
+                    <h6><h4 style="display:inline;">Query</h4> using an identifier, group or conformation</h6>
+                    <hr class="my-8 brand-background" style="border-width: 2px;">
+                    <h6></h6>
+                    <a class="btn button-primary" href="{{ url_for('formSearch') }}" target="_blank" role="button">Search</a>
+                  </div>
+                </div>
+
+
+                <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                  <div class="jumbotron-fluid dark-text"  style="margin:25px;text-align:center;">
+                    <h6><h4 style="display:inline;">Upload</h4> a structure to determine its conformation</h6>
+                    <hr class="my-8 brand-background" style="border-width: 2px;">
+
+                    <a class="btn button-primary" href="{{ url_for('webserver') }}" target="_blank" role="button">Upload</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 offset-lg-1">
+                  <div class="jumbotron-fluid dark-text"  style="margin:25px;text-align:center;">
+                    <h6><h4 style="display:inline;">Add a button</h4> ...expand</h6>
+                    <hr class="my-8 brand-background" style="border-width: 2px;">
+
+                    <a class="btn button-primary" href="{{ url_for('home') }}" target="_blank" role="button">New button</a>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 offset-lg-2">
+                  <div class="jumbotron-fluid dark-text"  style="margin:25px;text-align:center;">
+                    <h6><h4 style="display:inline;">Add a button</h4> ...expand</h6>
+                    <hr class="my-8 brand-background" style="border-width: 2px;">
+
+                    <a class="btn button-primary" href="{{ url_for('home') }}" target="_blank" role="button">New button</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block content %}
+
+        <div class="row">
+          <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+            <div class="container-fluid very-dark-text">
+              <div class="card mb-3">
+                <div class="card-header light-pink-background">
+                  <h5>Background</h5>
+                </div>
+                <div class="row no-gutters">
+                  <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card-body">
+                        <h5>Structure</h5>
+                        <p class="card-text" style="text-align:justify;">Introduction to antibody structure</p>
+                        <br>
+                        <h5>Complementary Determining Regions (CDRs)</h5>
+                        <p class="card-text" style="text-align:justify;">Description</p>
+                    </div>
+                  </div>
+                  <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+                    <br><br>
+                    <img src="static/img/INSR_structure.jpg"  height="350px;">
+                    <p style="text-align:center;">Typical structure of an antibody</p>
+                  </div>
+                  <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+                    <br><br>
+                    <img src="static/img/EGFR-superposition-figure.png" width="350px;" height="350px;">
+                    <p style="text-align:center;">Multiple orientations of CDRs</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+            <div class="container-fluid very-dark-text">
+              <div class="card mb-3">
+                <div class="card-header light-pink-background">
+                  <h5>Clustering and nomenclature for antibody CDRs</h5>
+                </div>
+                <div class="no-gutters">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                          <h5>Description<br><br></h5>
+                          <p style="text-align:justify;"><br>
+
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              <hr class="my-4 brand-background" style="margin:20px;">
+                <div class="no-gutters">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                          <h5>Second paragraph</h5>
+                          <p style="text-align:justify;">Description<a href="{{ url_for('static', filename="img/Rama-ABLE.png") }}" target="_blank">Ramachandran region (A, B, L, and E)</a>
+                            occupied by XDF residue backbone and the DFG-Phe χ1 rotamer (minus = -60°; plus = +60°; trans = 180°).</p>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+                    <div class="card-footer text-muted">
+                      <p>Article title, Authors<em>Journal</em> Year, <strong>Issue </strong>Pages.<br>
+                      <a href="https://doi.org/10.1073/pnas.1814279116" target="_blank">Link to article</a></p>
+                      <p>Article title. Authors, <em>Journal</em> Year, <strong>Issue</strong>.<br>
+                      <a href="https://www.nature.com/articles/s41598-019-56499-4" target="_blank">Link to article</a></p>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+
+
+    {% endblock %}
+  </body>
+
+</html>

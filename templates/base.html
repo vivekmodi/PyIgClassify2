@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/bootstrap.css") }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="{{ url_for('static', filename="js/pace.min.js") }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename="js/jquery-3.3.1.slim.min.js") }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename="js/popper.min.js") }}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename="js/sorttable.js") }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename="js/arrow_jquery.min.js") }}"></script>  <!-- Js for scroll up arrow -->
+    <script type="text/javascript" src="{{ url_for('static', filename="js/bootstrap.js") }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/icon.css") }}">   <!-- https://google.github.io/material-design-icons/ -->
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename="css/poppins.css") }}">   Poppins font from Google -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">   <!-- Roboto from Google -->
+
+
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename="css/main.css") }}">
+
+    <title></title>
+  </head>
+
+  <body>
+      <div class="container-fluid" style="padding:0px;">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <nav class="navbar navbar-expand-lg navbar-expand-md navbar-expand-sm navbar-expand-xs" style="background-color: #A1869B;">
+              <a class="navbar-brand light-text" href="{{ url_for('home') }}"><i class="material-icons">home</i>Home</a>
+              <button class="navbar-toggler light-text" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <div class="navbar-nav">
+                <a class="nav-item nav-link light-text"  href="{{ url_for('browse') }}">Browse</a>
+                <a class="nav-item nav-link light-text"  href="{{ url_for('formSearch') }}">Search</a>
+                <a class="nav-item nav-link light-text"  href="{{ url_for('webserver') }}">Upload</a>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid" style="padding:0px;">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          {% block jumbo %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-1 col-md-2 col-sm-2 col-xs-4">
+          <ul class="nav nav-fill nav-pills nav-stacked flex-column">
+            <li class="nav-item" style="padding:4px;padding-top:10px;"><a class="nav-link"  href="{{ url_for('about') }}" target="_blank">About</a></li>
+            <li class="nav-item" style="padding:4px;"><a class="nav-link"  href="{{ url_for('download') }}" target="_blank">Download</a></li>
+            <!-- <li class="nav-item" style="padding:4px;padding-top:0px;"><a class="nav-link"  href="{{ url_for('help') }}">Help</a></li> -->
+            <li class="nav-item" style="padding:4px;"><a class="nav-link"  href="{{ url_for('contact') }}">Contact</a></li>
+            <li class="nav-item" style="padding:4px;"><a class="nav-link"  href="{{ url_for('dunbrackLab') }}" target="_blank">DunbrackLab</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-11 col-md-10 col-sm-10 col-xs-8">
+          {% block content %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+
+
+    <button id="topBtn"><i class="fas fa-chevron-up"></i></button>
+    <script type="text/javascript" src="{{ url_for('static', filename="js/main.js") }}"></script>
+    <br>
+
+    <footer>
+      <div class="container-fluid dark-background light-text">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+            <p align="center">Developed by Antibody team in Dunbrack Lab. Last updated {{ updateDate }}.<br>
+              <a href="https://www.foxchase.org/" target="_blank" style="color:#F2F5F4;">Fox Chase Cancer Center</a></p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,305 @@
+
+html,body
+{
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* body{
+
+  /* padding-top: 35px; */
+
+  /* color: #222;
+  background-color: #F0F8FF; */
+  /* margin: 10px;
+
+} */
+
+.container-fluid {
+  padding:10px;
+}
+footer {
+  /* background-color:  #eaecee ;
+  padding-top: 10px;
+  padding-bottom: 10px; */
+}
+
+th.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  /*To not have transparent background.
+  background-color: white;*/
+}
+
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
+    content: " \25B4\25BE"
+}
+
+
+
+.jumbotron{
+  /* background-color: #CFD8DC;
+  color: black; */
+  text-align: left;
+}
+
+td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  /*font-size: 45px;   Preferred icon size is 32*/
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  vertical-align: middle !important;
+
+  padding-bottom: 3px;
+
+  /* Support for all WebKit browsers. */
+  /* -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  /* text-rendering: optimizeLegibility; */
+
+  /* Support for Firefox. */
+  /* -moz-osx-font-smoothing: grayscale; */
+
+  /* Support for IE. */
+  /* font-feature-settings: 'liga'; */
+}
+
+.nav-pills .nav-link {
+    /* background-color: #A688AD;
+    background-color: #9A9EB9; */
+    background-color: #A1869B;
+    color: white;
+}
+
+
+
+
+
+.dropdown-item {
+  font-size: 20px;
+}
+
+
+/* #topBtn{
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  font-size: 22px;
+  width: 50px;
+  height: 50px;
+  background: #aeb6bf;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: none;
+} */
+
+#topBtn {
+  font-family: FontAwesome;
+  /* content: "f077"; */
+  /* display: none; */
+  background-color: rgba(96, 125, 139,0.5);
+  width: 50px;
+  height: 50px;
+
+  /* text-align: center; */
+  /* margin: 30px; */
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  color: white;
+  border: none;
+  font-size: 32px;
+  font-style: italic !important;
+  font-weight: normal;
+  /*cursor: pointer; */
+  /* text-transform: none; */
+
+}
+/* #topBtn:hover {
+  cursor: pointer;
+  background-color: #607D8B;
+} */
+
+
+/* #topBtn {
+  content: "f062";
+  font-family: FontAwesome;
+
+
+  font-size: 2em;
+  line-height: 50px;
+  color: #fff;
+} */
+
+.form-group {
+  width: 100%;
+}
+
+a {
+  /* font-weight: bold; */
+  /* text-decoration: underline; */
+  /* color:#138b9e; */
+  color: #0683bf;
+}
+
+a:hover {
+  text-decoration: underline;
+  font-weight: bold;
+  color: #025278;
+  /* color: #F2F5F4; */
+  /* color: #E9B9B7; */
+}
+
+.button-primary:hover {
+  color: white;
+  font-weight: bold;
+}
+
+.divider{
+    width:5px;
+    height:auto;
+    display:inline-block;
+}
+
+/*Code for progress bar*/
+
+.pace {
+  -webkit-pointer-events: none;
+  pointer-events: none;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+
+  -webkit-perspective: 12rem;
+  -moz-perspective: 12rem;
+  -ms-perspective: 12rem;
+  -o-perspective: 12rem;
+  perspective: 12rem;
+
+  z-index: 2000;
+  position: fixed;
+  height: 6rem;
+  width: 6rem;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.pace.pace-inactive .pace-progress {
+  display: none;
+}
+
+.pace .pace-progress {
+  position: fixed;
+  z-index: 2000;
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 6rem;
+  width: 6rem !important;
+  line-height: 6rem;
+  font-size: 2rem;
+  border-radius: 50%;
+  background: #A1869B;
+  color: #fff;
+  font-family: "Helvetica Neue", sans-serif;
+  font-weight: 100;
+  text-align: center;
+
+  -webkit-animation: pace-theme-center-circle-spin linear infinite 2s;
+  -moz-animation: pace-theme-center-circle-spin linear infinite 2s;
+  -ms-animation: pace-theme-center-circle-spin linear infinite 2s;
+  -o-animation: pace-theme-center-circle-spin linear infinite 2s;
+  animation: pace-theme-center-circle-spin linear infinite 2s;
+
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+.pace .pace-progress:after {
+  content: attr(data-progress-text);
+  display: block;
+}
+
+@-webkit-keyframes pace-theme-center-circle-spin {
+  from { -webkit-transform: rotateY(0deg) }
+  to { -webkit-transform: rotateY(360deg) }
+}
+
+@-moz-keyframes pace-theme-center-circle-spin {
+  from { -moz-transform: rotateY(0deg) }
+  to { -moz-transform: rotateY(360deg) }
+}
+
+@-ms-keyframes pace-theme-center-circle-spin {
+  from { -ms-transform: rotateY(0deg) }
+  to { -ms-transform: rotateY(360deg) }
+}
+
+@-o-keyframes pace-theme-center-circle-spin {
+  from { -o-transform: rotateY(0deg) }
+  to { -o-transform: rotateY(360deg) }
+}
+
+@keyframes pace-theme-center-circle-spin {
+  from { transform: rotateY(0deg) }
+  to { transform: rotateY(360deg) }
+}
+/*End code for progress bar*/
+
+/* .navbar a:hover {
+  text-decoration: underline;
+  font-weight: bold;
+  color: #F2F5F4;
+} */
+/* It is necessary to provide size otherwise webgl element does not appear on screen. */
+
+
+
+.dark-background          { background: #A1869B; }    /*Mountbatten Pink*/
+.dark-text                { color: #A1869B; } /*Mountbatten Pink*/
+.very-dark-text           { color: #455A64  }
+.light-pink-background    { background: #D1C6AD; }  /*bone*/
+.light-text               { color: #F2F5F4; }
+.brand-background         { background: #0B1D51; }   /*Royal Blue Dark*/
+.brand-text               { color: #E9B9B7; }
+.light-accent-background  { background: #E08773; }
+.light-accent-text        { color: #E08773; }
+.dark-accent-background   { background: #A688AD; }
+.dark-accent-text         { color: #A688AD; }
+.divider-color            { border-color: #BDBDBD; }
+.text-info                { color: #547eb4; }
+.light-blue-background    { background: #b0c9eb; }
+.light-grey-background     { background: rgba(189, 189, 189,0.2);  }
+.button-download           {background: #17a2b8;}
+.button-primary           {background: #A1869B;color:white;}    /*old blue color #157ce8 */
