@@ -89,7 +89,7 @@ th {
 .nav-pills .nav-link {
     /* background-color: #A688AD;
     background-color: #9A9EB9; */
-    background-color: #A1869B;
+    background-color: #797596;
     color: white;
 }
 
@@ -168,7 +168,7 @@ a {
 a:hover {
   text-decoration: underline;
   font-weight: bold;
-  color: #025278;
+  color: white;
   /* color: #F2F5F4; */
   /* color: #E9B9B7; */
 }
@@ -227,7 +227,7 @@ a:hover {
   line-height: 6rem;
   font-size: 2rem;
   border-radius: 50%;
-  background: #A1869B;
+  background: #797596;
   color: #fff;
   font-family: "Helvetica Neue", sans-serif;
   font-weight: 100;
@@ -286,10 +286,10 @@ a:hover {
 
 
 
-.dark-background          { background: #A1869B; }    /*Mountbatten Pink*/
-.dark-text                { color: #A1869B; } /*Mountbatten Pink*/
-.very-dark-text           { color: #455A64  }
-.light-pink-background    { background: #D1C6AD; }  /*bone*/
+.dark-background          { background: #797596; }    /*Rhythm*/
+.dark-text                { color: #797596; } /*Rhythm*/
+.very-dark-text           { color: #OB1D51  } /*old #455A64*/
+.light-blue-background    { background: #D1E1E8; }
 .light-text               { color: #F2F5F4; }
 .brand-background         { background: #0B1D51; }   /*Royal Blue Dark*/
 .brand-text               { color: #E9B9B7; }
@@ -299,7 +299,6 @@ a:hover {
 .dark-accent-text         { color: #A688AD; }
 .divider-color            { border-color: #BDBDBD; }
 .text-info                { color: #547eb4; }
-.light-blue-background    { background: #b0c9eb; }
 .light-grey-background     { background: rgba(189, 189, 189,0.2);  }
 .button-download           {background: #17a2b8;}
-.button-primary           {background: #A1869B;color:white;}    /*old blue color #157ce8 */
+.button-primary           {background: #797596;color:white;}    /*old blue color #157ce8 */

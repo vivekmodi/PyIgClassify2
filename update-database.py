@@ -19,8 +19,33 @@ for i in df.index:
                  original_chain=df.at[i,'original_chain'],\
                  CDR=df.at[i,'CDR'],\
                  length=int(df.at[i,'length']),\
-                 cluster=df.at[i,'cluster'])
-
-
+                 cluster=df.at[i,'cluster'],\
+                 length_type=df.at[i,'length_type'],\
+                 fullcluster=df.at[i,'fullcluster'],\
+                 center=df.at[i,'center'],\
+                 seq=df.at[i,'seq'],\
+                 dis=df.at[i,'dis'],\
+                 normDis=df.at[i,'normDis'],\
+                 DistDegree=round(float(df.at[i,'DistDegree']),2),\
+                 bb_rmsd_cdr_align=df.at[i,'bb_rmsd_cdr_align'],\
+                 bb_rmsd_stem_align=df.at[i,'bb_rmsd_stem_align'],\
+                 ss=df.at[i,'ss'],\
+                 rama=df.at[i,'rama'],\
+                 dihedrals=df.at[i,'dihedrals'],\
+                 gene=df.at[i,'gene'],\
+                 species=df.at[i,'species'],\
+                 method=df.at[i,'method'],\
+                 resolution=df.at[i,'resolution'],\
+                 rfactor=df.at[i,'rfactor'],\
+                 SeqStart=int(df.at[i,'SeqStart']),\
+                 SeqEnd=int(df.at[i,'SeqEnd']),\
+                 IsRep=int(df.at[i,'IsRep']),\
+                 GSpecies=df.at[i,'GSpecies'],\
+                 IG=df.at[i,'IG'],\
+                 Germ=df.at[i,'Germ'],\
+                 Gpercent=df.at[i,'Gpercent'],\
+                 WebCluster=df.at[i,'WebCluster'],\
+                 WebDistance=df.at[i,'WebDistance'])
+    
     db.session.add(pdb1)
     db.session.commit()

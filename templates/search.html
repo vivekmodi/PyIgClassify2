@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Search</title>
+  </head>
+  <body>
+    {% extends "base.html" %}
+    {% block content %}
+    <br>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+          <h3 class="very-dark-text">Search database by a unique id</h3>
+          <form action="/formSearch" method="POST">
+          <div class="form-group very-dark-text">
+            <label for="inputString">Enter PDB</label>
+            <input type="text" class="form-control" name="inputString" placeholder="E.g. 1P7K">
+          </div>
+          <button type="submit" class="btn button-primary" style="color:white;">Search</button>
+          </form>
+          <br>
+          <hr class="my-4 brand-background">
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+          <h3 class="very-dark-text">Search by CDR cluster</h3>
+          <form action="/formSearchMultiple" method="POST">
+            <div class="form-group very-dark-text">
+              <label for="groupSelect">Select</label>
+              <select class="form-control" name="groupSelect">
+                <option value="All">All</option>
+                <optgroup label="──────────">
+                  <option value="AGC"></option>
+                  <option value="CAMK"></option>
+                  <option value="CK1"></option>
+                  <option value="CMGC"></option>
+                  <option value="NEK"></option>
+                  <option value="RGC"></option>
+                  <option value="STE"></option>
+                  <option value="TKL"></option>
+                  <option value="TYR"></option>
+                  <option value="OTHER"></option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="form-group very-dark-text">
+              <label for="labelSelect">Select</label>
+              <select class="form-control" name="labelSelect">
+                <option value="All">All</option>
+                <option disabled>──────────</option>
+                <optgroup label="">
+                  <option value="DFGin">All</option>
+                  <option value="BLAminus"></option>
+                  <option value="BLAplus"></option>
+                  <option value="ABAminus"></option>
+                  <option value="BLBminus"></option>
+                  <option value="BLBplus"></option>
+                  <option value="BLBtrans"></option>
+                </optgroup>
+                <option disabled>──────────</option>
+
+                <optgroup label="">
+                  <option value="DFGinter"></option>
+                  <option value="BABtrans"></option>
+                </optgroup>
+                <option disabled>──────────</option>
+
+                <optgroup label="">
+                  <option value="DFGout"></option>
+                  <option value="BBAminus"></option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="form-group very-dark-text">
+              <label for="ligTypeSelect">Select</label>
+              <select class="form-control" name="ligTypeSelect">
+                <option value="All">All</option>
+                <optgroup label="──────────">
+                  <option value="Type1"></option>
+                  <option value="Type1.5"></option>
+                  <option value="Type2"></option>
+                  <option value="Type3"></option>
+                  <option value="Allosteric"></option>
+                  <option value="NO_LIGAND"></option>
+                  </optgroup>
+              </select>
+            </div>
+
+            <button type="submit" class="btn button-primary light-text">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endblock %}
+  </body>
+</html>
