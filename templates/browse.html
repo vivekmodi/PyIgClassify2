@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>All-All</title>
+    <title>Browse</title>
   </head>
   <body>
     {% extends 'base.html' %}
@@ -16,8 +16,6 @@
                     <table class="table table-striped table-hover sortable dark-text" style="word-wrap: break-word;">
                       <thead class="thead-light">
                         <tr>
-
-                          <th scope="col">PDB_Chain_CDR</th>
                           <th scope="col">PDB</th>
                           <th scope="col">Original_Chain</th>
                           <th scope="col">CDR</th>
@@ -28,12 +26,10 @@
                       {% for item in retrieve_all %}
 
                       <tr>
-
-                        <td>{{ item.pdb_chain_cdr }}</td>
                         <td><a href="{{ url_for('uniqueQuery', queryname=item.pdb, settings='PDB') }}" target="_blank">{{ item.pdb }}</td>
                         <td>{{ item.original_chain }}</td>
-                        <td>{{ item.CDR }}</td>
-                        <td>{{ item.length }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.CDR, settings='CDR') }}" target="_blank">{{ item.CDR }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.CDR_length, settings='CDR_length') }}" target="_blank">{{ item.length }}</td>
                         <td><a href="{{ url_for('uniqueQuery', queryname=item.fullcluster, settings='fullcluster') }}" target="_blank">{{ item.fullcluster }}</td>
                       </tr>
 

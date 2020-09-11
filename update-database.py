@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Aug 27 10:30:11 2020
+
+@author: vivekmodi
+"""
 
 from PyIgClassify_App import db, Cluster
 #from flask_sqlalchemy import SQLAlchemy
@@ -13,12 +20,14 @@ db.drop_all()
 db.create_all()
 for i in df.index:
     df.at[i,'PDB_Chain_CDR']=f"{df.at[i,'PDB']}_{df.at[i,'original_chain']}_{df.at[i,'CDR']}"
+    df.at[i,'CDR_length']=f"{df.at[i,'CDR']}-{df.at[i,'length']}"
     pdb1=Cluster(pdb_chain_cdr=df.at[i,'PDB_Chain_CDR'],\
                  datatag=df.at[i,'datatag'],\
                  pdb=df.at[i,'PDB'],\
                  original_chain=df.at[i,'original_chain'],\
                  CDR=df.at[i,'CDR'],\
                  length=int(df.at[i,'length']),\
+                 CDR_length=df.at[i,'CDR_length'],\
                  cluster=df.at[i,'cluster'],\
                  length_type=df.at[i,'length_type'],\
                  fullcluster=df.at[i,'fullcluster'],\

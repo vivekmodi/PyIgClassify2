@@ -47,6 +47,7 @@ class Cluster(db.Model):
     original_chain=db.Column(db.Text)
     CDR=db.Column(db.Text)
     length=db.Column(db.Integer)
+    CDR_length=db.Column(db.Text)
     cluster=db.Column(db.Text)
     length_type=db.Column(db.Text)
     fullcluster=db.Column(db.Text)
@@ -75,18 +76,18 @@ class Cluster(db.Model):
     WebCluster=db.Column(db.Text)
     WebDistance=db.Column(db.REAL)
     
-def __init__(self,pdb_chain_cdr,datatag,pdb,original_chain,CDR,length,cluster,length_type,fullcluster,center,seq,dis,normDis,DistDegree,bb_rmsd_cdr_align,\
+def __init__(self,pdb_chain_cdr,datatag,pdb,original_chain,CDR,length,CDR_length,cluster,length_type,fullcluster,center,seq,dis,normDis,DistDegree,bb_rmsd_cdr_align,\
              bb_rmsd_stem_align,ss,rama,dihedrals,gene,species,method,resolution,rfactor,SeqStart,SeqEnd,IsRep,GSpecies,IG,Germ,Gpercent,WebCluster,WebDistance):
     
     self.pdb_chain_cdr=pdb_chain_cdr;self.datatag=datatag;self.pdb=pdb;self.original_chain=original_chain;self.CDR=CDR;self.length=length;\
-    self.cluster=cluster;self.length_type=length_type;self.fullcluster=fullcluster;self.center=center,self.seq=seq;self.dis=dis;\
+    self.CDR_length=CDR_length;self.cluster=cluster;self.length_type=length_type;self.fullcluster=fullcluster;self.center=center,self.seq=seq;self.dis=dis;\
     self.normDis=normDis;self.DistDegree=DistDegree;self.bb_rmsd_cdr_align=bb_rmsd_cdr_align;self.bb_rmsd_stem_align=bb_rmsd_stem_align;\
     self.ss=ss;self.rama=rama;self.dihedrals=dihedrals;self.gene=gene;self.species=species;self.method=method;self.resolution=resolution;\
     self.rfactor=rfactor;self.SeqStart=SeqStart;self.SeqEnd=SeqEnd;self.IsRep=IsRep;self.GSpecies=GSpecies;self.IG=IG;self.Germ=Germ;\
     self.Gpercent=Gpercent;self.WebCluster=WebCluster;self.WebDistance=WebDistance
     
 def __repr__(self):
-    return f'{self.pdb_chain_cdr} {self.datatag} {self.pdb} {self.original_chain} {self.CDR} {self.length} {self.cluster} {self.length_type}\
+    return f'{self.pdb_chain_cdr} {self.datatag} {self.pdb} {self.original_chain} {self.CDR} {self.length} {self.CDR_length} {self.cluster} {self.length_type}\
              {self.fullcluster} {self.center} {self.seq} {self.dis} {self.normDis} {self.DistDegree} {self.bb_rmsd_cdr_align} {self.bb_rmsd_stem_align}\
              {self.ss} {self.rama} {self.dihedrals} {self.gene} {self.species} {self.method} {self.resolution} {self.rfactor} {self.SeqStart}\
              {self.SeqEnd} {self.IsRep} {self.GSpecies} {self.IG} {self.Germ} {self.Gpercent} {self.WebCluster} {self.WebDistance}'
@@ -174,7 +175,27 @@ def uniqueQuery(settings,queryname):
         cluster_count=Cluster.query.filter(Cluster.fullcluster.contains(queryname)).count()
         species_list=Cluster.query.filter(Cluster.fullcluster.contains(queryname)).with_entities('species')
         species_unique=pd.Series(names[0] for names in species_list).unique()
-        return render_template('fullcluster.html',queryname=queryname,cluster_list=cluster_list,cluster_count=cluster_count,species_unique=species_unique)
+        gene_list=Cluster.query.filter(Cluster.fullcluster.contains(queryname)).with_entities('gene')
+        gene_unique=pd.Series(names[0] for names in gene_list).unique()
+        return render_template('fullcluster.html',queryname=queryname,cluster_list=cluster_list,cluster_count=cluster_count,species_unique=species_unique,gene_unique=gene_unique)
+    
+    if settings=='CDR':
+        cdr_list=Cluster.query.filter(Cluster.CDR.contains(queryname)).all()
+        cdr_count=Cluster.query.filter(Cluster.CDR.contains(queryname)).count()
+        species_list=Cluster.query.filter(Cluster.CDR.contains(queryname)).with_entities('species')
+        species_unique=pd.Series(names[0] for names in species_list).unique()
+        gene_list=Cluster.query.filter(Cluster.CDR.contains(queryname)).with_entities('gene')
+        gene_unique=pd.Series(names[0] for names in gene_list).unique()
+        return render_template('cdr.html',queryname=queryname,cdr_list=cdr_list,cdr_count=cdr_count,species_unique=species_unique,gene_unique=gene_unique)
+    
+    if settings=='CDR_length':
+        cdr_length_list=Cluster.query.filter(Cluster.CDR_length.contains(queryname)).all()
+        cdr_length_count=Cluster.query.filter(Cluster.CDR_length.contains(queryname)).count()
+        species_list=Cluster.query.filter(Cluster.CDR_length.contains(queryname)).with_entities('species')
+        species_unique=pd.Series(names[0] for names in species_list).unique()
+        gene_list=Cluster.query.filter(Cluster.CDR_length.contains(queryname)).with_entities('gene')
+        gene_unique=pd.Series(names[0] for names in gene_list).unique()
+        return render_template('cdr_length.html',queryname=queryname,cdr_length_list=cdr_length_list,cdr_length_count=cdr_length_count,species_unique=species_unique,gene_unique=gene_unique)
     
 #@app.route('/multipleQuery/<L1_cluster>/<H1_cluster>/<L2_cluster>/<H2_cluster>/<L3-cluster>/<H3_cluster>')
 #def multipleQuery(L1_cluster,H1_cluster,L2_cluster,H2_cluster,L3_cluster,H3_cluster):
