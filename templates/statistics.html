@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Statistics</title>
+    {% extends 'base.html' %}
+  </head>
+  {% block content %}
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        {% for fullcluster in clusterListDb %}
+        <div class="col-lg-4 col-md-4 col-sm-11 col-xs-12">
+
+              <div class="card  border-light bg-light mb-3">
+                  <div class="card-header light-pink-background"><h4>{{ fullcluster }}</h4>
+                    <div class="card-body">
+                        <h5 class="card-title">Number of entries: {{ entries[fullcluster] }}</h5>
+                        <h5 class="card-title">Number of chains:</h5>
+                        <h5 class="card-title">Percent of loop length:</h5>
+                        <h5 class="card-title">Median PDB Chain:</h5>
+                        <h5 class="card-title">Consensus sequence:</h5>
+                        <h5 class="card-title">Number of unique sequences:</h5>
+                        <h5 class="card-title">Species:{% for names in species_unique[fullcluster] %} {{ names }}{% endfor %}</h5>
+                        <h5 class="card-title">Genes:{% for names in gene_unique[fullcluster] %} {{ names }}{% endfor %}</h5>
+                        <h5 class="card-title">Most common Rama:</h5>
+                        <h5 class="card-title">Median angle:</h5>
+                        <h5 class="card-title">Sequence logo:</h5>
+
+                      </div>
+                    </div>
+                  </div>
+
+        </div>
+          {% endfor %}
+
+      </div>
+  </div>
+
+
+
+  </body>
+  {% endblock %}
+</html>

@@ -20,6 +20,7 @@ from collections import defaultdict
 from flask import Markup
 from sqlalchemy import desc,asc
 import pandas as pd
+from natsort import natsorted
 
 pwd=os.getcwd()
 sys.path.append(pwd+'/scripts')
@@ -93,11 +94,14 @@ def __repr__(self):
              {self.SeqEnd} {self.IsRep} {self.GSpecies} {self.IG} {self.Germ} {self.Gpercent} {self.WebCluster} {self.WebDistance}'
 
 def create_lists():
-    pdbListDb=list();chainListDb=list()
+    pdbListDb=list();chainListDb=list();clusterListDb=list()
     for pdbs in Cluster.query.with_entities(Cluster.pdb_chain_cdr):
         pdbid,chainid,cdr=pdbs[0].split('_')
         pdbListDb.append(pdbid);chainListDb.append(pdbid+chainid);
-    return pdbListDb,chainListDb
+    for fullcluster in Cluster.query.with_entities(Cluster.fullcluster):
+        clusterListDb.append(fullcluster[0])
+    clusterListDb=list(set(sorted(clusterListDb)))
+    return pdbListDb,chainListDb,clusterListDb
     
 @app.route('/index')
 @app.route('/home')
@@ -114,9 +118,24 @@ def browse():
     retrieve_all=Cluster.query.all()
     return render_template('browse.html',retrieve_all=retrieve_all)
 
+@app.route('/statistics')
+def statistics():
+    species_unique=dict();gene_unique=dict();entries=dict();chains=dict();
+    (pdbListDb,chainListDb,clusterListDb)=create_lists()
+    for fullcluster in clusterListDb:
+        #cluster_list=Cluster.query.filter(Cluster.fullcluster.contains(queryname)).all()
+        entries[fullcluster]=Cluster.query.filter(Cluster.fullcluster.contains(fullcluster)).count()
+        species_list=Cluster.query.filter(Cluster.fullcluster.contains(fullcluster)).with_entities('species')
+        species_unique[fullcluster]=pd.Series(names[0] for names in species_list).unique()
+        gene_list=Cluster.query.filter(Cluster.fullcluster.contains(fullcluster)).with_entities('gene')
+        gene_unique[fullcluster]=pd.Series(names[0] for names in gene_list).unique()
+        
+        
+    return render_template('statistics.html',clusterListDb=natsorted(clusterListDb,key=str),entries=entries,species_unique=species_unique,gene_unique=gene_unique)
+
 @app.route('/formSearch', methods=['GET','POST'])
 def formSearch():
-    (pdbListDb,chainListDb)=create_lists()
+    (pdbListDb,chainListDb,clusterListDb)=create_lists()
     
     if request.method=='POST':
         inputString=request.form['inputString'].upper()
