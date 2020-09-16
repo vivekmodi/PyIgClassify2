@@ -183,23 +183,24 @@ def formSearchMultiple():
 
 @app.route('/webserver', methods=['GET','POST'])
 def webserver():
-    render_template('webserver.html')
+    return render_template('webserver.html')
 
-@app.route('/download', methods=['GET','POST'])
+@app.route('/download')
 def download():
-    render_template('download.html')
+    return render_template('download.html')
 
-@app.route('/help', methods=['GET','POST'])
+@app.route('/help')
 def help():
-    render_template('help.html')
+    return render_template('help.html')
 
-@app.route('/contact', methods=['GET','POST'])
+@app.route('/contact')
 def contact():
-    render_template('contact.html')
+    return render_template('contact.html')
 
 @app.route('/dunbrackLab')
 def dunbrackLab():
     return redirect("http://dunbrack.fccc.edu")
+
 
 @app.route('/<settings>/<queryname>')
 def uniqueQuery(settings,queryname):
@@ -209,16 +210,18 @@ def uniqueQuery(settings,queryname):
             queryname=queryname[0:-1]           #Remove chain so that only PDB id is always searched
         pdb_list=Cluster.query.filter(Cluster.pdb.contains(queryname)).all()
         pdb_count=Cluster.query.filter(Cluster.pdb.contains(queryname)).count()
-
-        for items in pdb_list:
-            resolution=items.resolution;
-            species=items.species
-
-#        pymolSession=f'downloads/pymolSessions/{pdbGroup}_{pdbGene}_{queryname}.pse.zip'
-#        pymolScript=f'downloads/pymolSessionScripts/{pdbGroup}_{pdbGene}_{queryname}.zip'
-#        coordinateFiles=f'downloads/coordinateFiles/{pdbGroup}_{pdbGene}_{queryname}'
-
-        return render_template('pdbs.html',queryname=queryname,pdb_list=pdb_list,resolution=resolution,species=species,pdb_count=pdb_count)
+        pdb_resolution=Cluster.query.filter(Cluster.pdb.contains(queryname)).with_entities('resolution').first()[0]
+        pdb_rfactor=Cluster.query.filter(Cluster.pdb.contains(queryname)).with_entities('rfactor').first()[0]
+        vh_gene=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('H')).with_entities('gene').first()[0]
+        vl_gene=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('L')).with_entities('gene').first()[0]
+        vh_chainid=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('H')).with_entities('original_chain').first()[0]
+        vl_chainid=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('L')).with_entities('original_chain').first()[0]
+        vh_species=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('H')).with_entities('species').first()[0]
+        vl_species=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('L')).with_entities('species').first()[0]
+        
+       
+        return render_template('pdbs.html',queryname=queryname,pdb_list=pdb_list,pdb_count=pdb_count,pdb_resolution=pdb_resolution,pdb_rfactor=pdb_rfactor,\
+                               vh_gene=vh_gene,vl_gene=vl_gene,vh_chainid=vh_chainid,vl_chainid=vl_chainid,vh_species=vh_species,vl_species=vl_species)
 
     if settings=='fullcluster':
         cluster_list=Cluster.query.filter(Cluster.fullcluster.contains(queryname)).all()

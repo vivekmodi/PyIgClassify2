@@ -33,12 +33,12 @@
                         <td><a href="{{ url_for('uniqueQuery', queryname=item.pdb, settings='PDB') }}" target="_blank">{{ item.pdb }}</td>
                         <td>{{ item.heavy_chain }}</td>
                         <td>{{ item.light_chain }}</td>
-                        <td>{{ item.h1cluster }}</td>
-                        <td>{{ item.l1cluster }}</td>
-                        <td>{{ item.h2cluster }}</td>
-                        <td>{{ item.l2cluster }}</td>
-                        <td>{{ item.h3cluster }}</td>
-                        <td>{{ item.l3cluster }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.h1cluster, settings='fullcluster') }}" target="_blank">{{ item.h1cluster }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.l1cluster, settings='fullcluster') }}" target="_blank">{{ item.l1cluster }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.h2cluster, settings='fullcluster') }}" target="_blank">{{ item.h2cluster }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.l2cluster, settings='fullcluster') }}" target="_blank">{{ item.l2cluster }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.h3cluster, settings='fullcluster') }}" target="_blank">{{ item.h3cluster }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.l3cluster, settings='fullcluster') }}" target="_blank">{{ item.l3cluster }}</td>
                       </tr>
 
                       {% endfor %}

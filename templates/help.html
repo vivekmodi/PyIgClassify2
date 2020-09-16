@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Help</title>
+  </head>
+  <body>
+    {% extends 'base.html' %}
+    {% block content %}
+    <div class="container-fluid dark-text">
+      <div class="row">
+        <div class="col-lg-6 light-blue-background">
+          <h3>Help Summary</h3>
+          <p align="justify">The classification of the complementarity determing regions (CDRs) of antibodies presented on this website and the accompanying database is based on the clustering published in <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3065967/pdf/nihms-249534.pdf" target="_blank">North, Lehmann, and Dunbrack, J. Mol. Biol. 406:228–256 (2011)</a>. In that work, we were careful to use a high-quality data set by eliminating low-resolution structures and CDRs with high B-factors or high conformational energies. We used a distance function based on directional statistics and an effective clustering algorithm using affinity propagation. With this data set of over 300 non-redundant antibody structures, we were able to cover 28 CDR-length combinations (e.g., L1 length 11, or “L1-11” in our nomenclature) for L1, L2, L3, H1 and H2. Of our 28 CDR-lengths, 15 of them have multiple conformational clusters including ten for which Chothia had only one canonical class (Al-Lazikani et al., J. Mol. Biol., 273:927–48 (1997)). The current database includes assignment of all antibodies in the PDB to our existing classification system and the identification of a small number of CDRs that do not fit into that classification (often due to low resolution, the presence of cis non-proline residues, and in a few cases new lengths not present in the PDB in 2011). The database includes careful assignments of IMGT species and germlines for the V-region of all antibodies in the PDB, including the identification of non-human grafts of CDRs into predominantly human framework regions. The database can be searched by PDB code, cluster name (e.g. L1-11-1), and by IMGT germline. See the “Help Search” button for more information on searching. The “Help Submit” button provides information on uploading sequences of structures for analysis of the CDR sequences and conformations.</p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    {% endblock %}
+  </body>
+</html>
