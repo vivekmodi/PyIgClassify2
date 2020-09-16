@@ -6,7 +6,7 @@ Created on Thu Aug 27 10:30:11 2020
 @author: vivekmodi
 """
 
-from PyIgClassify_App import db, Cluster
+from PyIgClassify_App import db, Cluster, PDBrows
 #from flask_sqlalchemy import SQLAlchemy
 import sys
 import pandas as pd
@@ -58,3 +58,18 @@ for i in df.index:
     
     db.session.add(pdb1)
     db.session.commit()
+
+df=pd.read_csv('PDB_wise_data.csv',sep='\t',header='infer')
+for i in df.index:
+    pdb1=PDBrows(pdb=df.at[i,'PDB'],\
+                 light_chain=df.at[i,'LightChain'],\
+                 heavy_chain=df.at[i,'HeavyChain'],\
+                 h1cluster=df.at[i,'H1Cluster'],\
+                 l1cluster=df.at[i,'L1Cluster'],\
+                 h2cluster=df.at[i,'H2Cluster'],\
+                 l2cluster=df.at[i,'L2Cluster'],\
+                 h3cluster=df.at[i,'H3Cluster'],\
+                 l3cluster=df.at[i,'L3Cluster'])
+    db.session.add(pdb1)
+    db.session.commit()
+

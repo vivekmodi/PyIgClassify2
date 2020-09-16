@@ -28,68 +28,107 @@
         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
           <h3 class="very-dark-text">Search by CDR cluster</h3>
           <form action="/formSearchMultiple" method="POST">
-            <div class="form-group very-dark-text">
-              <label for="groupSelect">Select</label>
-              <select class="form-control" name="groupSelect">
-                <option value="All">All</option>
-                <optgroup label="──────────">
-                  <option value="AGC"></option>
-                  <option value="CAMK"></option>
-                  <option value="CK1"></option>
-                  <option value="CMGC"></option>
-                  <option value="NEK"></option>
-                  <option value="RGC"></option>
-                  <option value="STE"></option>
-                  <option value="TKL"></option>
-                  <option value="TYR"></option>
-                  <option value="OTHER"></option>
-                </optgroup>
-              </select>
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="form-group very-dark-text">
+                  <label for="h1Select">Select H1 Cluster</label>
+                  <select class="form-control" name="h1Select">
+                    <option value="All">All</option>
+                    <optgroup label="──────────">
+                      <option value="H1-10-*">H1-10-*</option>
+                      <option value="H1-10-1">H1-10-1</option>
+                      <option value="H1-10-cis5-*">H1-10-cis5-*</option>
+                      <option value="H1-11-*">H1-11-*</option>
+                      <option value="H1-12-*">H1-12-*</option>
+                      <option value="H1-12-1">H1-12-1</option>
+                      <option value="H1-13-*">H1-13-*</option>
+                    </optgroup>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group very-dark-text">
+                  <label for="h2Select">Select H2 Cluster</label>
+                  <select class="form-control" name="h2Select">
+                    <option value="All">All</option>
+                    <option disabled>──────────</option>
+                    <optgroup label="">
+                      <option value="H2-10-*">H2-10-*</option>
+                      <option value="H2-10-1">H2-10-1</option>
+                      <option value="H2-10-2">H2-10-2</option>
+                      <option value="H2-10-3">H2-10-3</option>
+                      <option value="H2-10-4">H2-10-4</option>
+                    </optgroup>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group very-dark-text">
+                  <label for="h3Select">Select H3 Cluster</label>
+                  <select class="form-control" name="h3Select">
+                    <option value="All">All</option>
+                    <option disabled>──────────</option>
+                    <optgroup label="">
+                      <option value="H3-10-*">H3-10-*</option>
+                      <option value="H3-10-cis10-*">H3-10-cis10-*</option>
+                      <option value="H3-10-cis5-*">H3-10-cis5-*</option>
+                      <option value="H3-10-cis6-*">H3-10-cis6-*</option>
+                      <option value="H3-10-cis7-*">H3-10-cis7-*</option>
+                    </optgroup>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group very-dark-text">
+                  <label for="l1Select">Select L1 Cluster</label>
+                  <select class="form-control" name="l1Select">
+                    <option value="All">All</option>
+                    <option disabled>──────────</option>
+                    <optgroup label="">
+                      <option value="L1-10-*">L1-10-*</option>
+                      <option value="L1-10-1">L1-10-1</option>
+                      <option value="L1-10-2">L1-10-2</option>
+                      <option value="L1-11-*">L1-11-*</option>
+                    </optgroup>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group very-dark-text">
+                  <label for="l2Select">Select L2 Cluster</label>
+                  <select class="form-control" name="l2Select">
+                    <option value="All">All</option>
+                    <option disabled>──────────</option>
+                    <optgroup label="">
+                      <option value="L2-12-*">L2-12-*</option>
+                      <option value="L2-12-1">L2-12-1</option>
+                      <option value="L2-12-2">L2-12-2</option>
+                      <option value="L2-12-cis12-*">L2-12-cis12-*</option>
+                    </optgroup>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group very-dark-text">
+                  <label for="l3Select">Select L3 Cluster</label>
+                  <select class="form-control" name="l3Select">
+                    <option value="All">All</option>
+                    <option disabled>──────────</option>
+                    <optgroup label="">
+                      <option value="L3-10-*">L3-10-*</option>
+                      <option value="L3-10-1">L3-10-1</option>
+                      <option value="L3-10-cis2,7-*">L3-10-cis2,7-*</option>
+                      <option value="L3-10-cis5,6-*">L3-10-cis5,6-*</option>
+                    </optgroup>
+                  </select>
+                </div>
+              </div>
+
             </div>
 
-            <div class="form-group very-dark-text">
-              <label for="labelSelect">Select</label>
-              <select class="form-control" name="labelSelect">
-                <option value="All">All</option>
-                <option disabled>──────────</option>
-                <optgroup label="">
-                  <option value="DFGin">All</option>
-                  <option value="BLAminus"></option>
-                  <option value="BLAplus"></option>
-                  <option value="ABAminus"></option>
-                  <option value="BLBminus"></option>
-                  <option value="BLBplus"></option>
-                  <option value="BLBtrans"></option>
-                </optgroup>
-                <option disabled>──────────</option>
 
-                <optgroup label="">
-                  <option value="DFGinter"></option>
-                  <option value="BABtrans"></option>
-                </optgroup>
-                <option disabled>──────────</option>
 
-                <optgroup label="">
-                  <option value="DFGout"></option>
-                  <option value="BBAminus"></option>
-                </optgroup>
-              </select>
-            </div>
 
-            <div class="form-group very-dark-text">
-              <label for="ligTypeSelect">Select</label>
-              <select class="form-control" name="ligTypeSelect">
-                <option value="All">All</option>
-                <optgroup label="──────────">
-                  <option value="Type1"></option>
-                  <option value="Type1.5"></option>
-                  <option value="Type2"></option>
-                  <option value="Type3"></option>
-                  <option value="Allosteric"></option>
-                  <option value="NO_LIGAND"></option>
-                  </optgroup>
-              </select>
-            </div>
 
             <button type="submit" class="btn button-primary light-text">Submit</button>
           </form>

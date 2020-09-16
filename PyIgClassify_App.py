@@ -76,22 +76,41 @@ class Cluster(db.Model):
     Gpercent=db.Column(db.REAL)
     WebCluster=db.Column(db.Text)
     WebDistance=db.Column(db.REAL)
-    
-def __init__(self,pdb_chain_cdr,datatag,pdb,original_chain,CDR,length,CDR_length,cluster,length_type,fullcluster,center,seq,dis,normDis,DistDegree,bb_rmsd_cdr_align,\
+
+    def __init__(self,pdb_chain_cdr,datatag,pdb,original_chain,CDR,length,CDR_length,cluster,length_type,fullcluster,center,seq,dis,normDis,DistDegree,bb_rmsd_cdr_align,\
              bb_rmsd_stem_align,ss,rama,dihedrals,gene,species,method,resolution,rfactor,SeqStart,SeqEnd,IsRep,GSpecies,IG,Germ,Gpercent,WebCluster,WebDistance):
-    
-    self.pdb_chain_cdr=pdb_chain_cdr;self.datatag=datatag;self.pdb=pdb;self.original_chain=original_chain;self.CDR=CDR;self.length=length;\
-    self.CDR_length=CDR_length;self.cluster=cluster;self.length_type=length_type;self.fullcluster=fullcluster;self.center=center,self.seq=seq;self.dis=dis;\
-    self.normDis=normDis;self.DistDegree=DistDegree;self.bb_rmsd_cdr_align=bb_rmsd_cdr_align;self.bb_rmsd_stem_align=bb_rmsd_stem_align;\
-    self.ss=ss;self.rama=rama;self.dihedrals=dihedrals;self.gene=gene;self.species=species;self.method=method;self.resolution=resolution;\
-    self.rfactor=rfactor;self.SeqStart=SeqStart;self.SeqEnd=SeqEnd;self.IsRep=IsRep;self.GSpecies=GSpecies;self.IG=IG;self.Germ=Germ;\
-    self.Gpercent=Gpercent;self.WebCluster=WebCluster;self.WebDistance=WebDistance
-    
-def __repr__(self):
-    return f'{self.pdb_chain_cdr} {self.datatag} {self.pdb} {self.original_chain} {self.CDR} {self.length} {self.CDR_length} {self.cluster} {self.length_type}\
-             {self.fullcluster} {self.center} {self.seq} {self.dis} {self.normDis} {self.DistDegree} {self.bb_rmsd_cdr_align} {self.bb_rmsd_stem_align}\
-             {self.ss} {self.rama} {self.dihedrals} {self.gene} {self.species} {self.method} {self.resolution} {self.rfactor} {self.SeqStart}\
-             {self.SeqEnd} {self.IsRep} {self.GSpecies} {self.IG} {self.Germ} {self.Gpercent} {self.WebCluster} {self.WebDistance}'
+
+        self.pdb_chain_cdr=pdb_chain_cdr;self.datatag=datatag;self.pdb=pdb;self.original_chain=original_chain;self.CDR=CDR;self.length=length;
+        self.CDR_length=CDR_length;self.cluster=cluster;self.length_type=length_type;self.fullcluster=fullcluster;self.center=center;self.seq=seq;self.dis=dis;
+        self.normDis=normDis;self.DistDegree=DistDegree;self.bb_rmsd_cdr_align=bb_rmsd_cdr_align;self.bb_rmsd_stem_align=bb_rmsd_stem_align;
+        self.ss=ss;self.rama=rama;self.dihedrals=dihedrals;self.gene=gene;self.species=species;self.method=method;self.resolution=resolution;
+        self.rfactor=rfactor;self.SeqStart=SeqStart;self.SeqEnd=SeqEnd;self.IsRep=IsRep;self.GSpecies=GSpecies;self.IG=IG;self.Germ=Germ;
+        self.Gpercent=Gpercent;self.WebCluster=WebCluster;self.WebDistance=WebDistance
+
+    def __repr__(self):
+        return f'{self.pdb_chain_cdr} {self.datatag} {self.pdb} {self.original_chain} {self.CDR} {self.length} {self.CDR_length} {self.cluster} {self.length_type}\
+                 {self.fullcluster} {self.center} {self.seq} {self.dis} {self.normDis} {self.DistDegree} {self.bb_rmsd_cdr_align} {self.bb_rmsd_stem_align}\
+                 {self.ss} {self.rama} {self.dihedrals} {self.gene} {self.species} {self.method} {self.resolution} {self.rfactor} {self.SeqStart}\
+                 {self.SeqEnd} {self.IsRep} {self.GSpecies} {self.IG} {self.Germ} {self.Gpercent} {self.WebCluster} {self.WebDistance}'
+
+class PDBrows(db.Model):
+    pdb=db.Column(db.Text,primary_key=True)
+    heavy_chain=db.Column(db.Text)
+    light_chain=db.Column(db.Text)
+    h1cluster=db.Column(db.Text)
+    l1cluster=db.Column(db.Text)
+    h2cluster=db.Column(db.Text)
+    l2cluster=db.Column(db.Text)
+    h3cluster=db.Column(db.Text)
+    l3cluster=db.Column(db.Text)
+
+    def __init__(self,pdb,heavy_chain,light_chain,h1cluster,l1cluster,h2cluster,l2cluster,h3cluster,l3cluster):
+        self.pdb=pdb;self.heavy_chain=heavy_chain;self.light_chain=light_chain;self.h1cluster=h1cluster;self.l1cluster=l1cluster;
+        self.h2cluster=h2cluster;self.l2cluster=l2cluster;self.h3cluster=h3cluster;self.l3cluster=l3cluster
+
+    def __repr__(self):
+        return f'{self.pdb} {self.heavy_chain} {self.light_chain} {self.h1cluster} {self.l1cluster} {self.h2cluster} {self.l2cluster}\
+            {self.h3cluster} {self.l3cluster}'
 
 def create_lists():
     pdbListDb=list();chainListDb=list();clusterListDb=list()
@@ -102,7 +121,7 @@ def create_lists():
         clusterListDb.append(fullcluster[0])
     clusterListDb=list(set(sorted(clusterListDb)))
     return pdbListDb,chainListDb,clusterListDb
-    
+
 @app.route('/index')
 @app.route('/home')
 @app.route('/')
@@ -115,7 +134,7 @@ def about():
 
 @app.route('/browse')
 def browse():
-    retrieve_all=Cluster.query.all()
+    retrieve_all=PDBrows.query.all()
     return render_template('browse.html',retrieve_all=retrieve_all)
 
 @app.route('/statistics')
@@ -129,14 +148,14 @@ def statistics():
         species_unique[fullcluster]=pd.Series(names[0] for names in species_list).unique()
         gene_list=Cluster.query.filter(Cluster.fullcluster.contains(fullcluster)).with_entities('gene')
         gene_unique[fullcluster]=pd.Series(names[0] for names in gene_list).unique()
-        
-        
+
+
     return render_template('statistics.html',clusterListDb=natsorted(clusterListDb,key=str),entries=entries,species_unique=species_unique,gene_unique=gene_unique)
 
 @app.route('/formSearch', methods=['GET','POST'])
 def formSearch():
     (pdbListDb,chainListDb,clusterListDb)=create_lists()
-    
+
     if request.method=='POST':
         inputString=request.form['inputString'].upper()
 
@@ -146,10 +165,22 @@ def formSearch():
             return redirect(url_for('uniqueQuery',queryname=inputString,settings='PDB'))
         else:
             return render_template('nomatch.html')
-        
+
     return render_template('search.html')
 
-    
+@app.route('/formSearchMultiple',methods=['GET','POST'])
+def formSearchMultiple():
+    if request.method=='POST':
+        h1Select=request.form['h1Select']
+        l1Select=request.form['l1Select']
+        h2Select=request.form['h2Select']
+        l2Select=request.form['l2Select']
+        h3Select=request.form['h3Select']
+        l3Select=request.form['l3Select']
+        return redirect(url_for('multipleQuery',h1Select=h1Select,l1Select=l1Select,h2Select=h2Select,l2Select=l2Select,h3Select=h3Select,l3Select=l3Select))
+    return render_template ('search.html')
+
+
 @app.route('/webserver', methods=['GET','POST'])
 def webserver():
     render_template('webserver.html')
@@ -157,11 +188,11 @@ def webserver():
 @app.route('/download', methods=['GET','POST'])
 def download():
     render_template('download.html')
-    
+
 @app.route('/help', methods=['GET','POST'])
 def help():
     render_template('help.html')
-    
+
 @app.route('/contact', methods=['GET','POST'])
 def contact():
     render_template('contact.html')
@@ -178,11 +209,11 @@ def uniqueQuery(settings,queryname):
             queryname=queryname[0:-1]           #Remove chain so that only PDB id is always searched
         pdb_list=Cluster.query.filter(Cluster.pdb.contains(queryname)).all()
         pdb_count=Cluster.query.filter(Cluster.pdb.contains(queryname)).count()
-        
+
         for items in pdb_list:
             resolution=items.resolution;
             species=items.species
-    
+
 #        pymolSession=f'downloads/pymolSessions/{pdbGroup}_{pdbGene}_{queryname}.pse.zip'
 #        pymolScript=f'downloads/pymolSessionScripts/{pdbGroup}_{pdbGene}_{queryname}.zip'
 #        coordinateFiles=f'downloads/coordinateFiles/{pdbGroup}_{pdbGene}_{queryname}'
@@ -197,7 +228,7 @@ def uniqueQuery(settings,queryname):
         gene_list=Cluster.query.filter(Cluster.fullcluster.contains(queryname)).with_entities('gene')
         gene_unique=pd.Series(names[0] for names in gene_list).unique()
         return render_template('fullcluster.html',queryname=queryname,cluster_list=cluster_list,cluster_count=cluster_count,species_unique=species_unique,gene_unique=gene_unique)
-    
+
     if settings=='CDR':
         cdr_list=Cluster.query.filter(Cluster.CDR.contains(queryname)).all()
         cdr_count=Cluster.query.filter(Cluster.CDR.contains(queryname)).count()
@@ -206,7 +237,7 @@ def uniqueQuery(settings,queryname):
         gene_list=Cluster.query.filter(Cluster.CDR.contains(queryname)).with_entities('gene')
         gene_unique=pd.Series(names[0] for names in gene_list).unique()
         return render_template('cdr.html',queryname=queryname,cdr_list=cdr_list,cdr_count=cdr_count,species_unique=species_unique,gene_unique=gene_unique)
-    
+
     if settings=='CDR_length':
         cdr_length_list=Cluster.query.filter(Cluster.CDR_length.contains(queryname)).all()
         cdr_length_count=Cluster.query.filter(Cluster.CDR_length.contains(queryname)).count()
@@ -215,12 +246,27 @@ def uniqueQuery(settings,queryname):
         gene_list=Cluster.query.filter(Cluster.CDR_length.contains(queryname)).with_entities('gene')
         gene_unique=pd.Series(names[0] for names in gene_list).unique()
         return render_template('cdr_length.html',queryname=queryname,cdr_length_list=cdr_length_list,cdr_length_count=cdr_length_count,species_unique=species_unique,gene_unique=gene_unique)
-    
-#@app.route('/multipleQuery/<L1_cluster>/<H1_cluster>/<L2_cluster>/<H2_cluster>/<L3-cluster>/<H3_cluster>')
-#def multipleQuery(L1_cluster,H1_cluster,L2_cluster,H2_cluster,L3_cluster,H3_cluster):
-#    retrieve_cluster=Cluster.query.filter(Cluster.fullcluster.contains(L1_cluster)).all()
-#                total_count[tabs]=Cluster.query.filter(Cluster.ligand_type.contains(ligTypeSelect),Cluster.ligand_type.notlike(dontmatch)).count()
 
+@app.route('/multipleQuery/<h1Select>/<l1Select>/<h2Select>/<l2Select>/<h3Select>/<l3Select>')
+def multipleQuery(h1Select,l1Select,h2Select,l2Select,h3Select,l3Select):
+    if h1Select=='All':
+        h1Select=''    #Does not match None, so skips the rows in which h1cluster value is missing - change in future
+    if l1Select=='All':
+        l1Select=''
+    if h2Select=='All':
+        h2Select=''
+    if l2Select=='All':
+        l2Select=''
+    if h3Select=='All':
+        h3Select=''
+    if l3Select=='All':
+        l3Select=''
+        
+    cluster_list=PDBrows.query.filter(PDBrows.h1cluster.contains(h1Select),PDBrows.l1cluster.contains(l1Select),\
+                                      PDBrows.h2cluster.contains(h2Select),PDBrows.l2cluster.contains(l2Select),\
+                                      PDBrows.h3cluster.contains(h3Select),PDBrows.l3cluster.contains(l3Select),).all()
+
+    return render_template('clusterquery.html',cluster_list=cluster_list)
 
 
 if __name__ == '__main__':

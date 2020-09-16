@@ -27,7 +27,7 @@
                           <th scope="col">L3 Cluster</th>
                           </tr>
                       </thead>
-                      {% for item in retrieve_all %}
+                      {% for item in cluster_list %}
 
                       <tr>
                         <td><a href="{{ url_for('uniqueQuery', queryname=item.pdb, settings='PDB') }}" target="_blank">{{ item.pdb }}</td>
