@@ -180,6 +180,19 @@ def formSearchMultiple():
         return redirect(url_for('multipleQuery',h1Select=h1Select,l1Select=l1Select,h2Select=h2Select,l2Select=l2Select,h3Select=h3Select,l3Select=l3Select))
     return render_template ('search.html')
 
+@app.route('/formSearchMultipleCDR',methods=['GET','POST'])
+def formSearchMultipleCDR():
+    if request.method=='POST':
+        h1CDRSelect=request.form['h1CDRSelect']
+        l1CDRSelect=request.form['l1CDRSelect']
+        h2CDRSelect=request.form['h2CDRSelect']
+        l2CDRSelect=request.form['l2CDRSelect']
+        h3CDRSelect=request.form['h3CDRSelect']
+        l3CDRSelect=request.form['l3CDRSelect']
+        return redirect(url_for('multipleQueryCDR',h1CDRSelect=h1CDRSelect,l1CDRSelect=l1CDRSelect,h2CDRSelect=h2CDRSelect,l2CDRSelect=l2CDRSelect,h3CDRSelect=h3CDRSelect,\
+        l3CDRSelect=l3CDRSelect))
+    return render_template ('search.html')
+
 
 @app.route('/webserver', methods=['GET','POST'])
 def webserver():
@@ -218,8 +231,8 @@ def uniqueQuery(settings,queryname):
         vl_chainid=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('L')).with_entities('original_chain').first()[0]
         vh_species=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('H')).with_entities('species').first()[0]
         vl_species=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('L')).with_entities('species').first()[0]
-        
-       
+
+
         return render_template('pdbs.html',queryname=queryname,pdb_list=pdb_list,pdb_count=pdb_count,pdb_resolution=pdb_resolution,pdb_rfactor=pdb_rfactor,\
                                vh_gene=vh_gene,vl_gene=vl_gene,vh_chainid=vh_chainid,vl_chainid=vl_chainid,vh_species=vh_species,vl_species=vl_species)
 
@@ -252,24 +265,45 @@ def uniqueQuery(settings,queryname):
 
 @app.route('/multipleQuery/<h1Select>/<l1Select>/<h2Select>/<l2Select>/<h3Select>/<l3Select>')
 def multipleQuery(h1Select,l1Select,h2Select,l2Select,h3Select,l3Select):
-    if h1Select=='All':
-        h1Select=''    #Does not match None, so skips the rows in which h1cluster value is missing - change in future
-    if l1Select=='All':
-        l1Select=''
-    if h2Select=='All':
-        h2Select=''
-    if l2Select=='All':
-        l2Select=''
-    if h3Select=='All':
-        h3Select=''
-    if l3Select=='All':
-        l3Select=''
-        
-    cluster_list=PDBrows.query.filter(PDBrows.h1cluster.contains(h1Select),PDBrows.l1cluster.contains(l1Select),\
-                                      PDBrows.h2cluster.contains(h2Select),PDBrows.l2cluster.contains(l2Select),\
-                                      PDBrows.h3cluster.contains(h3Select),PDBrows.l3cluster.contains(l3Select),).all()
+        if h1Select=='All':
+            h1Select=''    #Does not match None, so skips the rows in which h1cluster value is missing - change in future
+        if l1Select=='All':
+            l1Select=''
+        if h2Select=='All':
+            h2Select=''
+        if l2Select=='All':
+            l2Select=''
+        if h3Select=='All':
+            h3Select=''
+        if l3Select=='All':
+            l3Select=''
 
-    return render_template('clusterquery.html',cluster_list=cluster_list)
+        cluster_list=PDBrows.query.filter(PDBrows.h1cluster.contains(h1Select),PDBrows.l1cluster.contains(l1Select),\
+                                          PDBrows.h2cluster.contains(h2Select),PDBrows.l2cluster.contains(l2Select),\
+                                          PDBrows.h3cluster.contains(h3Select),PDBrows.l3cluster.contains(l3Select),).all()
+
+        return render_template('clusterquery.html',cluster_list=cluster_list)
+
+@app.route('/multipleQueryCDR/<h1CDRSelect>/<l1CDRSelect>/<h2CDRSelect>/<l2CDRSelect>/<h3CDRSelect>/<l3CDRSelect>')
+def multipleQueryCDR(h1CDRSelect,l1CDRSelect,h2CDRSelect,l2CDRSelect,h3CDRSelect,l3CDRSelect):
+        if h1CDRSelect=='All':
+            h1CDRSelect=''    #Does not match None, so skips the rows in which h1cluster value is missing - change in future
+        if l1CDRSelect=='All':
+            l1CDRSelect=''
+        if h2CDRSelect=='All':
+            h2CDRSelect=''
+        if l2CDRSelect=='All':
+            l2CDRSelect=''
+        if h3CDRSelect=='All':
+            h3CDRSelect=''
+        if l3CDRSelect=='All':
+            l3CDRSelect=''
+
+        cluster_list=PDBrows.query.filter(PDBrows.h1cluster.contains(h1Select),PDBrows.l1cluster.contains(l1Select),\
+                                          PDBrows.h2cluster.contains(h2Select),PDBrows.l2cluster.contains(l2Select),\
+                                          PDBrows.h3cluster.contains(h3Select),PDBrows.l3cluster.contains(l3Select),).all()
+
+        return render_template('clusterquery.html',cluster_list=cluster_list)
 
 
 if __name__ == '__main__':
