@@ -41,57 +41,39 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 Migrate(app,db)
 
-class Cluster(db.Model):
-    pdb_chain_cdr=db.Column(db.Text,primary_key=True)
-    datatag=db.Column(db.Text)
+class perCDR(db.Model):
+    pdb_chain_cdr=db.Column(db.Text,primary_key=True)    #Might not be unique, check with Roland
+    cdr=db.Column(db.Text)
+    cdr_length=db.Column(db.Text)
     pdb=db.Column(db.Text)
-    original_chain=db.Column(db.Text)
-    CDR=db.Column(db.Text)
-    length=db.Column(db.Integer)
-    CDR_length=db.Column(db.Text)
-    cluster=db.Column(db.Text)
-    length_type=db.Column(db.Text)
-    fullcluster=db.Column(db.Text)
-    center=db.Column(db.Integer)
-    seq=db.Column(db.Text)
-    dis=db.Column(db.REAL)
-    normDis=db.Column(db.REAL)
-    DistDegree=db.Column(db.REAL)
-    bb_rmsd_cdr_align=db.Column(db.REAL)
-    bb_rmsd_stem_align=db.Column(db.REAL)
-    ss=db.Column(db.Text)
-    rama=db.Column(db.Text)
-    dihedrals=db.Column(db.Text)
+    chain=db.Column(db.Text)
+    aho_resnum=db.Column(db.Text)
+    author_resnum=db.Column(db.Text)
+    sequence=db.Column(db.Text)
+    germline_sequence=db.Column(db.Text)
     gene=db.Column(db.Text)
-    species=db.Column(db.Text)
-    method=db.Column(db.Text)
-    resolution=db.Column(db.REAL)
-    rfactor=db.Column(db.REAL)
-    SeqStart=db.Column(db.Integer)
-    SeqEnd=db.Column(db.Integer)
-    IsRep=db.Column(db.Integer)
-    GSpecies=db.Column(db.Text)
-    IG=db.Column(db.Text)
-    Germ=db.Column(db.Text)
-    Gpercent=db.Column(db.REAL)
-    WebCluster=db.Column(db.Text)
-    WebDistance=db.Column(db.REAL)
+    pdb_species=db.Column(db.Text)
+    cluster=db.Column(db.Text)
+    distance=db.Column(db.REAL)
+    cdr_germline=db.Column(db.Text)
+    cdr_seqid=db.Column(db.REAL)
+    rama4=db.Column(db.Text)
+    beta_turns=db.Column(db.Text)
+    minimum_edia=db.Column(db.REAL)
+    keywords=db.Column(db.Text)
 
-    def __init__(self,pdb_chain_cdr,datatag,pdb,original_chain,CDR,length,CDR_length,cluster,length_type,fullcluster,center,seq,dis,normDis,DistDegree,bb_rmsd_cdr_align,\
-             bb_rmsd_stem_align,ss,rama,dihedrals,gene,species,method,resolution,rfactor,SeqStart,SeqEnd,IsRep,GSpecies,IG,Germ,Gpercent,WebCluster,WebDistance):
 
-        self.pdb_chain_cdr=pdb_chain_cdr;self.datatag=datatag;self.pdb=pdb;self.original_chain=original_chain;self.CDR=CDR;self.length=length;
-        self.CDR_length=CDR_length;self.cluster=cluster;self.length_type=length_type;self.fullcluster=fullcluster;self.center=center;self.seq=seq;self.dis=dis;
-        self.normDis=normDis;self.DistDegree=DistDegree;self.bb_rmsd_cdr_align=bb_rmsd_cdr_align;self.bb_rmsd_stem_align=bb_rmsd_stem_align;
-        self.ss=ss;self.rama=rama;self.dihedrals=dihedrals;self.gene=gene;self.species=species;self.method=method;self.resolution=resolution;
-        self.rfactor=rfactor;self.SeqStart=SeqStart;self.SeqEnd=SeqEnd;self.IsRep=IsRep;self.GSpecies=GSpecies;self.IG=IG;self.Germ=Germ;
-        self.Gpercent=Gpercent;self.WebCluster=WebCluster;self.WebDistance=WebDistance
+    def __init__(self,pdb_chain_cdr,cdr,cdr_length,pdb,chain,aho_resnum,author_resnum,sequence,germline_sequence,gene,pdb_species,cluster,distance,cdr_germline,cdr_seqid,\
+                rama4,beta_turns,minimum_edia,keywords):
+                self.pdb_chain_cdr=pdb_chain_cdr;self.cdr=cdr;self.cdr_length=cdr_length;self.pdb=pdb;self.chain=chain;self.aho_resnum=aho_resnum;self.author_resnum=author_resnum;\
+                self.sequence=sequence;self.germline_sequence=germline_sequence;self.gene=gene;self.pdb_species=pdb_species;self.cluster=cluster;self.distance=distance;\
+                self.cdr_germline=cdr_germline;self.cdr_seqid=cdr_seqid;self.rama4=rama4;self.beta_turns=beta_turns;self.minimum_edia=minimum_edia;self.keywords=keywords
+
 
     def __repr__(self):
-        return f'{self.pdb_chain_cdr} {self.datatag} {self.pdb} {self.original_chain} {self.CDR} {self.length} {self.CDR_length} {self.cluster} {self.length_type}\
-                 {self.fullcluster} {self.center} {self.seq} {self.dis} {self.normDis} {self.DistDegree} {self.bb_rmsd_cdr_align} {self.bb_rmsd_stem_align}\
-                 {self.ss} {self.rama} {self.dihedrals} {self.gene} {self.species} {self.method} {self.resolution} {self.rfactor} {self.SeqStart}\
-                 {self.SeqEnd} {self.IsRep} {self.GSpecies} {self.IG} {self.Germ} {self.Gpercent} {self.WebCluster} {self.WebDistance}'
+        return f'{self.pdb_chain_cdr} {self.cdr} {self.cdr_length} {self.pdb} {self.chain} {self.aho_resnum} {self.author_renum} {self.sequence} {self.germline_sequence}\
+                 {self.gene} {self.pdb_species} {self.cluster} {self.distance} {self.cdr_germline} {self.cdr_seqid} {self.rama4} {self.beta_turns}\
+                 {self.minimum_edia} {self.keywords}'
 
 class PDBrows(db.Model):
     pdb=db.Column(db.Text,primary_key=True)

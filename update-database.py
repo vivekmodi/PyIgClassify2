@@ -6,7 +6,7 @@ Created on Thu Aug 27 10:30:11 2020
 @author: vivekmodi
 """
 
-from PyIgClassify_App import db, Cluster, PDBrows
+from PyIgClassify_App import db, perCDR, PDBrows
 #from flask_sqlalchemy import SQLAlchemy
 import sys
 import pandas as pd
@@ -15,47 +15,33 @@ from datetime import datetime
 filename=sys.argv[1]
 today=str(datetime.now())[0:10].strip()
 
-df=pd.read_csv(filename,sep=',',header='infer',nrows=3550)
+df=pd.read_csv(filename,sep=',',header='infer')
 db.drop_all()
 db.create_all()
 for i in df.index:
-    df.at[i,'PDB_Chain_CDR']=f"{df.at[i,'PDB']}_{df.at[i,'original_chain']}_{df.at[i,'CDR']}"
-    df.at[i,'CDR_length']=f"{df.at[i,'CDR']}-{df.at[i,'length']}"
-    pdb1=Cluster(pdb_chain_cdr=df.at[i,'PDB_Chain_CDR'],\
-                 datatag=df.at[i,'datatag'],\
+    df.at[i,'PDB_Chain_CDR']=f"{df.at[i,'PDB']}_{df.at[i,'Chain']}_{df.at[i,'CDR']}"
+    if df.at[i,'CDR seqid']=='-':
+        df.at[i,'CDR seqid']=999.0
+    pdb1=perCDR(pdb_chain_cdr=df.at[i,'PDB_Chain_CDR'],\
+                 cdr=df.at[i,'CDR'],\
+                 cdr_length=df.at[i,'CDR Length'],\
                  pdb=df.at[i,'PDB'],\
-                 original_chain=df.at[i,'original_chain'],\
-                 CDR=df.at[i,'CDR'],\
-                 length=int(df.at[i,'length']),\
-                 CDR_length=df.at[i,'CDR_length'],\
-                 cluster=df.at[i,'cluster'],\
-                 length_type=df.at[i,'length_type'],\
-                 fullcluster=df.at[i,'fullcluster'],\
-                 center=df.at[i,'center'],\
-                 seq=df.at[i,'seq'],\
-                 dis=df.at[i,'dis'],\
-                 normDis=df.at[i,'normDis'],\
-                 DistDegree=round(float(df.at[i,'DistDegree']),2),\
-                 bb_rmsd_cdr_align=df.at[i,'bb_rmsd_cdr_align'],\
-                 bb_rmsd_stem_align=df.at[i,'bb_rmsd_stem_align'],\
-                 ss=df.at[i,'ss'],\
-                 rama=df.at[i,'rama'],\
-                 dihedrals=df.at[i,'dihedrals'],\
-                 gene=df.at[i,'gene'],\
-                 species=df.at[i,'species'],\
-                 method=df.at[i,'method'],\
-                 resolution=df.at[i,'resolution'],\
-                 rfactor=df.at[i,'rfactor'],\
-                 SeqStart=int(df.at[i,'SeqStart']),\
-                 SeqEnd=int(df.at[i,'SeqEnd']),\
-                 IsRep=int(df.at[i,'IsRep']),\
-                 GSpecies=df.at[i,'GSpecies'],\
-                 IG=df.at[i,'IG'],\
-                 Germ=df.at[i,'Germ'],\
-                 Gpercent=df.at[i,'Gpercent'],\
-                 WebCluster=df.at[i,'WebCluster'],\
-                 WebDistance=df.at[i,'WebDistance'])
-    
+                 chain=df.at[i,'Chain'],\
+                 aho_resnum=df.at[i,'AHO Resnum'],\
+                 author_resnum=df.at[i,'Author Resnum'],\
+                 sequence=df.at[i,'Sequence'],\
+                 germline_sequence=df.at[i,'Germline Sequence'],\
+                 gene=df.at[i,'Gene'],\
+                 pdb_species=df.at[i,'PDB Species'],\
+                 cluster=df.at[i,'Cluster'],\
+                 distance=df.at[i,'Distance'],\
+                 cdr_germline=df.at[i,'CDR Germline'],\
+                 cdr_seqid=df.at[i,'CDR seqid'],\
+                 rama4=df.at[i,'Rama4'],\
+                 beta_turns=df.at[i,'Beta Turns'],\
+                 minimum_edia=df.at[i,'Minimum EDIA'],\
+                 keywords=df.at[i,'Keywords'])
+
     db.session.add(pdb1)
     db.session.commit()
 
@@ -72,4 +58,3 @@ for i in df.index:
                  l3cluster=df.at[i,'L3Cluster'])
     db.session.add(pdb1)
     db.session.commit()
-
