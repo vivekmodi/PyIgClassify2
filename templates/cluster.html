@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>CDR Length</title>
+    <title>Cluster</title>
     {% extends 'base.html' %}
   </head>
   {% block content %}
@@ -11,13 +11,23 @@
       <div class="row">
         <div class="col-lg-5 col-md-5 col-sm-11 col-xs-12">
               <div class="card  border-light bg-light mb-3">
-                  <div class="card-header light-pink-background"><h4>CDR Length: {{ queryname }}</h4>
+                  <div class="card-header light-pink-background"><h4>Cluster: {{ queryname }}</h4>
                     <div class="card-body">
-                        <h5 class="card-title">CDR: <a href="{{ url_for('uniqueQuery', queryname=cdr_cdr_length, settings='cdr') }}" target="_blank">{{ cdr_cdr_length }}</a></h5>
+                        <h5 class="card-title">CDR Length: <a href="{{ url_for('uniqueQuery', queryname=cluster_cdr_length, settings='cdr_length') }}" target="_blank">{{ cluster_cdr_length }}</a></h5>
+                        <h5 class="card-title">CDR: <a href="{{ url_for('uniqueQuery', queryname=cluster_cdr, settings='cdr') }}" target="_blank">{{ cluster_cdr }}</a></h5>
                         <h5 class="card-title">Number of entries: {{ pdb_unique_count }}</h5>
                         <h5 class="card-title">Number of chains: {{ chain_count }}</h5>
+                        <h5 class="card-title">Percent of loop length: {{ per_loop }}</h5>
+                        <h5 class="card-title">Median PDB Chain:</h5>
+                        <h5 class="card-title">Consensus sequence:</h5>
+                        <h5 class="card-title">Number of unique sequences: {{ seq_unique_count }}</h5>
                         <h5 class="card-title">Species:{% for names in pdb_species_unique %} {{ names }}{% endfor %}</h5>
                         <h5 class="card-title">Genes:{% for names in gene_unique %} {{ names }}{% endfor %}</h5>
+                        <h5 class="card-title">Most common Rama: {{ most_common_rama_string }} ({{ most_common_rama_count }} chains)</h5>
+                        <h5 class="card-title">Median angle:</h5>
+                        <h5 class="card-title">Sequence logo:</h5>
+                        <h5 class="card-title">Rama logo:</h5>
+                        <h5 class="card-title">Rama logo:</h5>
 
                       </div>
                     </div>
@@ -31,7 +41,6 @@
                         <th scope="col" style='text-align:left;'>PDB</th>
                         <th scope="col" style='text-align:left;'>Resolution</th>
                         <th scope="col" style='text-align:left;'>Gene</th>
-                        <th scope="col" style='text-align:left;'>Cluster</th>
                         <th scope="col" style='text-align:left;'>PDB Species</th>
                         <th scope="col" style='text-align:left;'>Frame Germline</th>
                         <th scope="col" style='text-align:left;'>Frame Germline %id</th>
@@ -47,12 +56,11 @@
                         <th scope="col" style='text-align:left;'>Minimum EDIA</th>
                       </tr>
                     </thead>
-                      {% for item in cdr_length_list %}
+                      {% for item in cluster_list %}
                       <tr style="line-height:20px;">
                         <td><a href="{{ url_for('uniqueQuery', queryname=item.pdb, settings='PDB') }}" target="_blank">{{ item.pdb }}{{ item.chain }}</a></td>
                         <td style='text-align:left;'></td>
                         <td style='text-align:left;'>{{ item.gene }}</td>
-                        <td style='text-align:left;'><a href="{{ url_for('uniqueQuery', queryname=item.cluster, settings='cluster') }}" target="_blank">{{ item.cluster }}</a></td>
                         <td style='text-align:left;'>{{ item.pdb_species }}</td>
                         <td style='text-align:left;'></td>
                         <td style='text-align:left;'></td>

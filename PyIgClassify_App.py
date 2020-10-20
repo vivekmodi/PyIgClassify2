@@ -71,7 +71,7 @@ class perCDR(db.Model):
 
 
     def __repr__(self):
-        return f'{self.pdb_chain_cdr} {self.cdr} {self.cdr_length} {self.pdb} {self.chain} {self.aho_resnum} {self.author_renum} {self.sequence} {self.germline_sequence}\
+        return f'{self.pdb_chain_cdr} {self.cdr} {self.cdr_length} {self.pdb} {self.chain} {self.aho_resnum} {self.author_resnum} {self.sequence} {self.germline_sequence}\
                  {self.gene} {self.pdb_species} {self.cluster} {self.distance} {self.cdr_germline} {self.cdr_seqid} {self.rama4} {self.beta_turns}\
                  {self.minimum_edia} {self.keywords}'
 
@@ -96,14 +96,31 @@ class PDBrows(db.Model):
 
 def create_lists():
     pdbListDb=list();chainListDb=list();clusterListDb=list()
-    for pdbs in Cluster.query.with_entities(Cluster.pdb_chain_cdr):
+    for pdbs in perCDR.query.with_entities(perCDR.pdb_chain_cdr):
         pdbid,chainid,cdr=pdbs[0].split('_')
         pdbListDb.append(pdbid);chainListDb.append(pdbid+chainid);
-    for fullcluster in Cluster.query.with_entities(Cluster.fullcluster):
-        clusterListDb.append(fullcluster[0])
+    for cluster in perCDR.query.with_entities(perCDR.cluster):
+        clusterListDb.append(cluster[0])
     clusterListDb=list(set(sorted(clusterListDb)))
     return pdbListDb,chainListDb,clusterListDb
 
+def percent_loop_length(chain_count,queryname):
+    (cdr,length,cluster)=queryname.split('-')
+    cdr_length=cdr+'_'+length
+    cdr_length_count=perCDR.query.filter(perCDR.cdr_length.contains(cdr_length)).count()
+    per_loop=round((chain_count/cdr_length_count)*100,2)
+    return per_loop
+
+def most_common_rama(rama_list):
+    rama_dict=dict()
+    for item in rama_list:
+        rama_dict[item]=0
+    for item in rama_list:
+        rama_dict[item]+=1
+    most_common_rama_count=max(rama_dict.values())
+    most_common_rama_string=max(rama_dict, key=lambda key: rama_dict[key]).rama4
+    return most_common_rama_count,most_common_rama_string    
+    
 @app.route('/index')
 @app.route('/home')
 @app.route('/')
@@ -121,18 +138,18 @@ def browse():
 
 @app.route('/statistics')
 def statistics():
-    species_unique=dict();gene_unique=dict();entries=dict();chains=dict();
+    pdb_species_unique=dict();gene_unique=dict();entries=dict()
     (pdbListDb,chainListDb,clusterListDb)=create_lists()
-    for fullcluster in clusterListDb:
-        #cluster_list=Cluster.query.filter(Cluster.fullcluster.contains(queryname)).all()
-        entries[fullcluster]=Cluster.query.filter(Cluster.fullcluster.contains(fullcluster)).count()
-        species_list=Cluster.query.filter(Cluster.fullcluster.contains(fullcluster)).with_entities('species')
-        species_unique[fullcluster]=pd.Series(names[0] for names in species_list).unique()
-        gene_list=Cluster.query.filter(Cluster.fullcluster.contains(fullcluster)).with_entities('gene')
-        gene_unique[fullcluster]=pd.Series(names[0] for names in gene_list).unique()
+    for cluster in clusterListDb:
+        #cluster_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).all()
+        entries[cluster]=perCDR.query.filter(perCDR.cluster.contains(cluster)).count()
+        pdb_species_list=perCDR.query.filter(perCDR.cluster.contains(cluster)).with_entities('pdb_species')
+        pdb_species_unique[cluster]=pd.Series(names[0] for names in pdb_species_list).unique()
+        gene_list=perCDR.query.filter(perCDR.cluster.contains(cluster)).with_entities('gene')
+        gene_unique[cluster]=pd.Series(names[0] for names in gene_list).unique()
 
 
-    return render_template('statistics.html',clusterListDb=natsorted(clusterListDb,key=str),entries=entries,species_unique=species_unique,gene_unique=gene_unique)
+    return render_template('statistics.html',clusterListDb=natsorted(clusterListDb,key=str),entries=entries,pdb_species_unique=pdb_species_unique,gene_unique=gene_unique)
 
 @app.route('/formSearch', methods=['GET','POST'])
 def formSearch():
@@ -203,47 +220,61 @@ def uniqueQuery(settings,queryname):
         queryname=queryname.upper()
         if len(queryname)==5:
             queryname=queryname[0:-1]           #Remove chain so that only PDB id is always searched
-        pdb_list=Cluster.query.filter(Cluster.pdb.contains(queryname)).all()
-        pdb_count=Cluster.query.filter(Cluster.pdb.contains(queryname)).count()
-        pdb_resolution=Cluster.query.filter(Cluster.pdb.contains(queryname)).with_entities('resolution').first()[0]
-        pdb_rfactor=Cluster.query.filter(Cluster.pdb.contains(queryname)).with_entities('rfactor').first()[0]
-        vh_gene=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('H')).with_entities('gene').first()[0]
-        vl_gene=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('L')).with_entities('gene').first()[0]
-        vh_chainid=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('H')).with_entities('original_chain').first()[0]
-        vl_chainid=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('L')).with_entities('original_chain').first()[0]
-        vh_species=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('H')).with_entities('species').first()[0]
-        vl_species=Cluster.query.filter(Cluster.pdb.contains(queryname),Cluster.CDR.contains('L')).with_entities('species').first()[0]
+        pdb_list=perCDR.query.filter(perCDR.pdb.contains(queryname)).all()
+        pdb_count=perCDR.query.filter(perCDR.pdb.contains(queryname)).count()
+        pdb_resolution=perCDR.query.filter(perCDR.pdb.contains(queryname)).with_entities('resolution').first()[0]
+        pdb_rfactor=perCDR.query.filter(perCDR.pdb.contains(queryname)).with_entities('rfactor').first()[0]
+        vh_gene=perCDR.query.filter(perCDR.pdb.contains(queryname),perCDR.cdr.contains('H')).with_entities('gene').first()[0]
+        vl_gene=perCDR.query.filter(perCDR.pdb.contains(queryname),perCDR.cdr.contains('L')).with_entities('gene').first()[0]
+        vh_chainid=perCDR.query.filter(perCDR.pdb.contains(queryname),perCDR.cdr.contains('H')).with_entities('chain').first()[0]   #Might not be always true; what if there are two heavy chains in the PDB?
+        vl_chainid=perCDR.query.filter(perCDR.pdb.contains(queryname),perCDR.cdr.contains('L')).with_entities('chain').first()[0]
+        vh_species=perCDR.query.filter(perCDR.pdb.contains(queryname),perCDR.cdr.contains('H')).with_entities('pdb_species').first()[0]
+        vl_species=perCDR.query.filter(perCDR.pdb.contains(queryname),perCDR.cdr.contains('L')).with_entities('pdb_species').first()[0]
 
 
         return render_template('pdbs.html',queryname=queryname,pdb_list=pdb_list,pdb_count=pdb_count,pdb_resolution=pdb_resolution,pdb_rfactor=pdb_rfactor,\
                                vh_gene=vh_gene,vl_gene=vl_gene,vh_chainid=vh_chainid,vl_chainid=vl_chainid,vh_species=vh_species,vl_species=vl_species)
 
-    if settings=='fullcluster':
-        cluster_list=Cluster.query.filter(Cluster.fullcluster.contains(queryname)).all()
-        cluster_count=Cluster.query.filter(Cluster.fullcluster.contains(queryname)).count()
-        species_list=Cluster.query.filter(Cluster.fullcluster.contains(queryname)).with_entities('species')
-        species_unique=pd.Series(names[0] for names in species_list).unique()
-        gene_list=Cluster.query.filter(Cluster.fullcluster.contains(queryname)).with_entities('gene')
+    if settings=='cluster':
+        cluster_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).all()
+        cluster_cdr_length=perCDR.query.filter(perCDR.cluster.contains(queryname)).with_entities('cdr_length').first()[0]
+        cluster_cdr=perCDR.query.filter(perCDR.cluster.contains(queryname)).with_entities('cdr').first()[0]
+        pdb_count=perCDR.query.filter(perCDR.cluster.contains(queryname)).with_entities('pdb')
+        pdb_unique_count=len(pd.Series(names[0] for names in pdb_count).unique())
+        chain_count=perCDR.query.filter(perCDR.cluster.contains(queryname)).count()    #This is number of chains with a given cluster
+        per_loop=percent_loop_length(chain_count,queryname)
+        seq_in_cluster=perCDR.query.filter(perCDR.cluster.contains(queryname)).with_entities('sequence')
+        seq_unique_count=len(pd.Series(names[0] for names in seq_in_cluster).unique())
+        pdb_species_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).with_entities('pdb_species')
+        pdb_species_unique=pd.Series(names[0] for names in pdb_species_list).unique()
+        gene_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).with_entities('gene')
         gene_unique=pd.Series(names[0] for names in gene_list).unique()
-        return render_template('fullcluster.html',queryname=queryname,cluster_list=cluster_list,cluster_count=cluster_count,species_unique=species_unique,gene_unique=gene_unique)
+        rama_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).with_entities('rama4')
+        (most_common_rama_count,most_common_rama_string )=most_common_rama(rama_list)
+        return render_template('cluster.html',queryname=queryname,cluster_list=cluster_list,cluster_cdr_length=cluster_cdr_length,cluster_cdr=cluster_cdr,pdb_unique_count=pdb_unique_count,chain_count=chain_count,per_loop=per_loop,seq_unique_count=seq_unique_count,pdb_species_unique=pdb_species_unique,gene_unique=gene_unique,most_common_rama_count=most_common_rama_count,most_common_rama_string=most_common_rama_string)
 
-    if settings=='CDR':
-        cdr_list=Cluster.query.filter(Cluster.CDR.contains(queryname)).all()
-        cdr_count=Cluster.query.filter(Cluster.CDR.contains(queryname)).count()
-        species_list=Cluster.query.filter(Cluster.CDR.contains(queryname)).with_entities('species')
-        species_unique=pd.Series(names[0] for names in species_list).unique()
-        gene_list=Cluster.query.filter(Cluster.CDR.contains(queryname)).with_entities('gene')
+    if settings=='cdr':
+        cdr_list=perCDR.query.filter(perCDR.cdr.contains(queryname)).all()
+        pdb_count=perCDR.query.filter(perCDR.cdr.contains(queryname)).with_entities('pdb')
+        pdb_unique_count=len(pd.Series(names[0] for names in pdb_count).unique())
+        chain_count=perCDR.query.filter(perCDR.cdr.contains(queryname)).count()    #This is number of chains with a given cluster
+        pdb_species_list=perCDR.query.filter(perCDR.cdr.contains(queryname)).with_entities('pdb_species')
+        pdb_species_unique=pd.Series(names[0] for names in pdb_species_list).unique()
+        gene_list=perCDR.query.filter(perCDR.cdr.contains(queryname)).with_entities('gene')
         gene_unique=pd.Series(names[0] for names in gene_list).unique()
-        return render_template('cdr.html',queryname=queryname,cdr_list=cdr_list,cdr_count=cdr_count,species_unique=species_unique,gene_unique=gene_unique)
+        return render_template('cdr.html',queryname=queryname,cdr_list=cdr_list,pdb_unique_count=pdb_unique_count,chain_count=chain_count,pdb_species_unique=pdb_species_unique,gene_unique=gene_unique)
 
-    if settings=='CDR_length':
-        cdr_length_list=Cluster.query.filter(Cluster.CDR_length.contains(queryname)).all()
-        cdr_length_count=Cluster.query.filter(Cluster.CDR_length.contains(queryname)).count()
-        species_list=Cluster.query.filter(Cluster.CDR_length.contains(queryname)).with_entities('species')
-        species_unique=pd.Series(names[0] for names in species_list).unique()
-        gene_list=Cluster.query.filter(Cluster.CDR_length.contains(queryname)).with_entities('gene')
+    if settings=='cdr_length':
+        cdr_length_list=perCDR.query.filter(perCDR.cdr_length.contains(queryname)).all()
+        cdr_cdr_length=perCDR.query.filter(perCDR.cdr_length.contains(queryname)).with_entities('cdr').first()[0]
+        pdb_count=perCDR.query.filter(perCDR.cdr_length.contains(queryname)).with_entities('pdb')
+        pdb_unique_count=len(pd.Series(names[0] for names in pdb_count).unique())
+        chain_count=perCDR.query.filter(perCDR.cdr_length.contains(queryname)).count()    #This is number of chains with a given cluster
+        pdb_species_list=perCDR.query.filter(perCDR.cdr_length.contains(queryname)).with_entities('pdb_species')
+        pdb_species_unique=pd.Series(names[0] for names in pdb_species_list).unique()
+        gene_list=perCDR.query.filter(perCDR.cdr_length.contains(queryname)).with_entities('gene')
         gene_unique=pd.Series(names[0] for names in gene_list).unique()
-        return render_template('cdr_length.html',queryname=queryname,cdr_length_list=cdr_length_list,cdr_length_count=cdr_length_count,species_unique=species_unique,gene_unique=gene_unique)
+        return render_template('cdr_length.html',queryname=queryname,cdr_cdr_length=cdr_cdr_length,cdr_length_list=cdr_length_list,pdb_unique_count=pdb_unique_count,chain_count=chain_count,pdb_species_unique=pdb_species_unique,gene_unique=gene_unique)
 
 @app.route('/multipleQuery/<h1Select>/<l1Select>/<h2Select>/<l2Select>/<h3Select>/<l3Select>')
 def multipleQuery(h1Select,l1Select,h2Select,l2Select,h3Select,l3Select):

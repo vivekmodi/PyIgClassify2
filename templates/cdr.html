@@ -11,19 +11,12 @@
       <div class="row">
         <div class="col-lg-5 col-md-5 col-sm-11 col-xs-12">
               <div class="card  border-light bg-light mb-3">
-                  <div class="card-header light-pink-background"><h4>CDR: {{ queryname }}</h4>
+                  <div class="card-header light-pink-background"><h4>CDR : {{ queryname }}</h4>
                     <div class="card-body">
-                        <h5 class="card-title">Number of entries: {{ cdr_count }}</h5>
-                        <h5 class="card-title">Number of chains:</h5>
-                        <h5 class="card-title">Percent of loop length:</h5>
-                        <h5 class="card-title">Median PDB Chain:</h5>
-                        <h5 class="card-title">Consensus sequence:</h5>
-                        <h5 class="card-title">Number of unique sequences:</h5>
-                        <h5 class="card-title">Species:{% for names in species_unique %} {{ names }}{% endfor %}</h5>
-                        <h5 class="card-title">Genes:{% for names in genes_unique %} {{ names }}{% endfor %}</h5>
-                        <h5 class="card-title">Most common Rama:</h5>
-                        <h5 class="card-title">Median angle:</h5>
-                        <h5 class="card-title">Sequence logo:</h5>
+                        <h5 class="card-title">Number of entries: {{ pdb_unique_count }}</h5>
+                        <h5 class="card-title">Number of chains: {{ chain_count }}</h5>
+                        <h5 class="card-title">Species:{% for names in pdb_species_unique %} {{ names }}{% endfor %}</h5>
+                        <h5 class="card-title">Genes:{% for names in gene_unique %} {{ names }}{% endfor %}</h5>
 
                       </div>
                     </div>
@@ -35,14 +28,14 @@
                     <thead class="thead-light">
                       <tr>
                         <th scope="col" style='text-align:left;'>PDB</th>
-                        <th scope="col" style='text-align:left;'>Chain</th>
+                        <th scope="col" style='text-align:left;'>Resolution</th>
                         <th scope="col" style='text-align:left;'>Gene</th>
-                        <th scope="col" style='text-align:left;'>Species</th>
-                        <th scope="col" style='text-align:left;'>Length</th>
-                        <th scope="col">Cluster</th>
+                        <th scope="col" style='text-align:left;'>CDR Length</th>
+                        <th scope="col" style='text-align:left;'>Cluster</th>
+                        <th scope="col" style='text-align:left;'>PDB Species</th>
                         <th scope="col" style='text-align:left;'>Frame Germline</th>
                         <th scope="col" style='text-align:left;'>Frame Germline %id</th>
-                        <th scope="col" style='text-align:left;'>SeqStart - SeqEnd</th>
+                        <th scope="col" style='text-align:left;'>Author Resnum</th>
                         <th scope="col" style='text-align:left;'>Distance</th>
                         <th scope="col" style='text-align:left;'>CDR germline</th>
                         <th scope="col" style='text-align:left;'>CDR %id</th>
@@ -50,26 +43,30 @@
                         <th scope="col" style='text-align:left;'>Sequence</th>
                         <th scope="col" style='text-align:left;'>Germline Sequence</th>
                         <th scope="col" style='text-align:left;'>Rama</th>
+                        <th scope="col" style='text-align:left;'>Beta Turns</th>
+                        <th scope="col" style='text-align:left;'>Minimum EDIA</th>
                       </tr>
                     </thead>
                       {% for item in cdr_list %}
                       <tr style="line-height:20px;">
-                        <td><a href="{{ url_for('uniqueQuery', queryname=item.pdb, settings='PDB') }}" target="_blank">{{ item.pdb }}</td>
-                        <td style='text-align:left;'>{{ item.original_chain }}</td>
+                        <td style='text-align:left;'><a href="{{ url_for('uniqueQuery', queryname=item.pdb, settings='PDB') }}" target="_blank">{{ item.pdb }}{{ item.chain }}</td>
+                        <td style='text-align:left;'></td>
                         <td style='text-align:left;'>{{ item.gene }}</td>
-                        <td style='text-align:left;'>{{ item.species }}</td>
-                        <td><a href="{{ url_for('uniqueQuery', queryname=item.CDR_length, settings='CDR_length') }}" target="_blank">{{ item.length }}</td>
-                        <td><a href="{{ url_for('uniqueQuery', queryname=item.fullcluster, settings='fullcluster') }}" target="_blank">{{ item.fullcluster }}</td>
-                        <td style='text-align:left;'>{{ item.IG }}</td>
-                        <td style='text-align:left;'>{{ item.Gpercent}}</td>
-                        <td style='text-align:left;'>{{ item.SeqStart }} - {{ item.SeqEnd }}</td>
-                        <td style='text-align:left;'>{{ item.DistDegree }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.cdr_length, settings='cdr_length') }}" target="_blank">{{ item.cdr_length }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.cluster, settings='cluster') }}" target="_blank">{{ item.cluster }}</td>
+                        <td style='text-align:left;'>{{ item.pdb_species }}</td>
                         <td style='text-align:left;'></td>
                         <td style='text-align:left;'></td>
+                        <td style='text-align:left;'>{{ item.author_resnum }}</td>
+                        <td style='text-align:left;'>{{ item.distance }}</td>
                         <td style='text-align:left;'></td>
-                        <td style='text-align:left;'>{{ item.seq }}</td>
+                        <td style='text-align:left;'>{{ item.cdr_seqid }}</td>
                         <td style='text-align:left;'></td>
-                        <td style='text-align:left;'>{{ item.rama }}</td>
+                        <td style='text-align:left;'>{{ item.sequence }}</td>
+                        <td style='text-align:left;'></td>
+                        <td style='text-align:left;'>{{ item.rama4 }}</td>
+                        <td style='text-align:left;'>{{ item.beta_turns }}</td>
+                        <td style='text-align:left;'>{{ item.minimum_edia }}</td>
                     </tr>
                     {% endfor %}
         </table>

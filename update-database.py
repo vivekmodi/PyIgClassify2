@@ -16,12 +16,16 @@ filename=sys.argv[1]
 today=str(datetime.now())[0:10].strip()
 
 df=pd.read_csv(filename,sep=',',header='infer')
+df['Cluster'].fillna('None',inplace=True)
 db.drop_all()
 db.create_all()
 for i in df.index:
+    df.at[i,'PDB']=df.at[i,'PDB'].upper()
     df.at[i,'PDB_Chain_CDR']=f"{df.at[i,'PDB']}_{df.at[i,'Chain']}_{df.at[i,'CDR']}"
     if df.at[i,'CDR seqid']=='-':
         df.at[i,'CDR seqid']=999.0
+    # if not df.at[i,'Cluster']:
+    #     df.at[i,'Cluster']='None'
     pdb1=perCDR(pdb_chain_cdr=df.at[i,'PDB_Chain_CDR'],\
                  cdr=df.at[i,'CDR'],\
                  cdr_length=df.at[i,'CDR Length'],\
@@ -34,7 +38,7 @@ for i in df.index:
                  gene=df.at[i,'Gene'],\
                  pdb_species=df.at[i,'PDB Species'],\
                  cluster=df.at[i,'Cluster'],\
-                 distance=df.at[i,'Distance'],\
+                 distance=round(float(df.at[i,'Distance']),2),\
                  cdr_germline=df.at[i,'CDR Germline'],\
                  cdr_seqid=df.at[i,'CDR seqid'],\
                  rama4=df.at[i,'Rama4'],\
