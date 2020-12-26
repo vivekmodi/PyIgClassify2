@@ -19,16 +19,27 @@
                           <th scope="col">PDB</th>
                           <th scope="col">VH Chain</th>
                           <th scope="col">VL Chain</th>
+                          <th scope="col">Antigen</th>
                           <th scope="col">VH Framework Germline</th>
                           <th scope="col">VH Framework Seqid</th>
                           <th scope="col">VL Framework Germline</th>
                           <th scope="col">VL Framework Seqid</th>
-                          <th scope="col">H1 Cluster, Seqid</th>
-                          <th scope="col">H2 Cluster, Seqid</th>
-                          <th scope="col">H3 Cluster, Seqid</th>
-                          <th scope="col">L1 Cluster, Seqid</th>
-                          <th scope="col">L2 Cluster, Seqid</th>
-                          <th scope="col">L3 Cluster, Seqid</th>
+                          <th scope="col">H1 Cluster</th>
+                          <th scope="col">H1 Seqid</th>
+                          <th scope="col">H2 Cluster</th>
+                          <th scope="col">H2 Seqid</th>
+                          <th scope="col">H3 Cluster</th>
+                          <th scope="col">H3 Seqid</th>
+                          <th scope="col">H4 Cluster</th>
+                          <th scope="col">H4 Seqid</th>
+                          <th scope="col">L1 Cluster</th>
+                          <th scope="col">L1 Seqid</th>
+                          <th scope="col">L2 Cluster</th>
+                          <th scope="col">L2 Seqid</th>
+                          <th scope="col">L3 Cluster</th>
+                          <th scope="col">L3 Seqid</th>
+                          <th scope="col">L4 Cluster</th>
+                          <th scope="col">L4 Seqid</th>
                           </tr>
                       </thead>
                       {% for item in retrieve_all %}
@@ -37,16 +48,27 @@
                         <td><a href="{{ url_for('uniqueQuery', queryname=item.pdb, settings='PDB') }}" target="_blank">{{ item.pdb }}</a></td>
                         <td>{{ item.vh_chain }}</td>
                         <td>{{ item.vl_chain }}</td>
-                        <td><a href="#" target="_blank">{{ item.vh_framework }}</a></td>
+                        <td></td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.vh_framework, settings='germline') }}" target="_blank">{{ item.vh_framework }}</a></td>
                         <td>{{ item.vh_framework_seqid }}</td>
-                        <td><a href="#" target="_blank">{{ item.vl_framework }}</a></td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.vl_framework, settings='germline') }}" target="_blank">{{ item.vl_framework }}</a></td>
                         <td>{{ item.vl_framework_seqid }}</td>
-                        <td><a href="#" target="_blank">{{ item.h1_cluster }}</a>, {{ item.h1_seqid }}</td>
-                        <td><a href="#" target="_blank">{{ item.h2_cluster }}</a>, {{ item.h2_seqid }}</td>
-                        <td><a href="#" target="_blank">{{ item.h3_cluster }}</a>, {{ item.h3_seqid }}</td>
-                        <td><a href="#" target="_blank">{{ item.l1_cluster }}</a>, {{ item.l1_seqid }}</td>
-                        <td><a href="#" target="_blank">{{ item.l2_cluster }}</a>, {{ item.l2_seqid }}</td>
-                        <td><a href="#" target="_blank">{{ item.l3_cluster }}</a>, {{ item.l3_seqid }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.h1_cluster, settings='cluster') }}" target="_blank">{{ item.h1_cluster }}</a></td>
+                        <td>{{ item.h1_seqid }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.h2_cluster, settings='cluster') }}" target="_blank">{{ item.h2_cluster }}</a></td>
+                        <td>{{ item.h2_seqid }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.h3_cluster, settings='cluster') }}" target="_blank">{{ item.h3_cluster }}</a></td>
+                        <td>{{ item.h3_seqid }}</td>
+                        <td></td>
+                        <td></td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.l1_cluster, settings='cluster') }}" target="_blank">{{ item.l1_cluster }}</a></td>
+                        <td>{{ item.l1_seqid }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.l2_cluster, settings='cluster') }}" target="_blank">{{ item.l2_cluster }}</a></td>
+                        <td>{{ item.l2_seqid }}</td>
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.l3_cluster, settings='cluster') }}" target="_blank">{{ item.l3_cluster }}</a></td>
+                        <td>{{ item.l3_seqid }}</td>
+                        <td></td>
+                        <td></td>
                       </tr>
 
                       {% endfor %}

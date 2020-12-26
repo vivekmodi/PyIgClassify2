@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Germline</title>
+    {% extends 'base.html' %}
+  </head>
+  {% block content %}
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-11 col-xs-12">
+              <div class="card  border-light bg-light mb-3">
+                  <div class="card-header light-pink-background"><h4>Germline: {{ queryname }}</h4>
+                    <div class="card-body">
+
+                        <h5 class="card-title">Number of entries:</h5>
+                        <h5 class="card-title">Number of chains:</h5>
+
+
+                      </div>
+                    </div>
+                  </div>
+        </div>
+
+        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-12">
+          <table class="table table-responsive table-striped table-hover sortable dark-text">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col" style='text-align:left;'>PDB</th>
+                        <th scope="col" style='text-align:left;'>Residue nums</th
+                        <th scope="col" style='text-align:left;'>Resolution</th>
+                        <th scope="col" style='text-align:left;'>PDB Species</th>
+                        <th scope="col" style='text-align:left;'>Frame Germline</th>
+                        <th scope="col" style='text-align:left;'>Frame Germline Seqid</th>
+                        <th scope="col" style='text-align:left;'>CDR germline</th>
+                        <th scope="col" style='text-align:left;'>CDR1 Sequence</th>
+                        <th scope="col" style='text-align:left;'>CDR1 Seqid</th>
+                        <th scope="col" style='text-align:left;'>CDR1 Cluster</th>
+                        <th scope="col" style='text-align:left;'>CDR2 Sequence</th>
+                        <th scope="col" style='text-align:left;'>CDR2 Seqid</th>
+                        <th scope="col" style='text-align:left;'>CDR2 Cluster</th>
+                        <th scope="col" style='text-align:left;'>CDR3 Sequence</th>
+                        <th scope="col" style='text-align:left;'>CDR3 Seqid</th>
+                        <th scope="col" style='text-align:left;'>CDR3 Cluster</th>
+                        <th scope="col" style='text-align:left;'>CDR4 Sequence</th>
+                        <th scope="col" style='text-align:left;'>CDR4 Seqid</th>
+                        <th scope="col" style='text-align:left;'>CDR4 Cluster</th>
+                      </tr>
+                    </thead>
+                      {% for item in germline_list %}
+                      <tr style="line-height:20px;">
+                        <td><a href="{{ url_for('uniqueQuery', queryname=item.pdb, settings='PDB') }}" target="_blank">{{ item.pdb }}{{ item.chain }}</a></td>
+                        <td style='text-align:left;'></td>
+                        <td style='text-align:left;'>{{ item.resolution }}</td>
+                        <td style='text-align:left;'></td>
+                        <td style='text-align:left;'></td>
+                        <td style='text-align:left;'></td>
+                        <td style='text-align:left;'></td>
+                        <td style='text-align:left;'></td>
+                        <td style='text-align:left;'>{{ item.h1_seqid }}</td>
+                        <td style='text-align:left;'>{{ item.h1_cluster }}</td>
+                        <td style='text-align:left;'></td>
+                        <td style='text-align:left;'>{{ item.h2_seqid }}</td>
+                        <td style='text-align:left;'>{{ item.h2_cluster }}</td>
+                        <td style='text-align:left;'></td>
+                        <td style='text-align:left;'>{{ item.l1_seqid }}</td>
+                        <td style='text-align:left;'>{{ item.l1_cluster }}</td>
+                        <td style='text-align:left;'></td>
+                        <td style='text-align:left;'>{{ item.l2_seqid }}</td>
+                        <td style='text-align:left;'>{{ item.l2_cluster }}</td>
+                    </tr>
+                    {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+
+  </body>
+  {% endblock %}
+</html>

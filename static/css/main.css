@@ -167,7 +167,6 @@ a {
 
 a:hover {
   text-decoration: underline;
-  font-weight: bold;
   color: white;
   /* color: #F2F5F4; */
   /* color: #E9B9B7; */
@@ -175,7 +174,7 @@ a:hover {
 
 .button-primary:hover {
   color: white;
-  font-weight: bold;
+
 }
 
 .divider{

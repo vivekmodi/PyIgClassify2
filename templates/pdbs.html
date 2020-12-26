@@ -63,7 +63,7 @@
                         <th scope="col" style='text-align:left;'>Chain</th>
                         <th scope="col" style='text-align:left;'>Author Resnum</th>
                         <th scope="col" style='text-align:left;'>Gene</th>
-                        <th scope="col" style='text-align:left;'>Species</th>
+                        <th scope="col" style='text-align:left;'>PDB Species</th>
                         <th scope="col">CDR-Length</th>
                         <th scope="col">AHO Resnum</th>
                         <th scope="col" style='text-align:left;'>Cluster</th>
@@ -83,11 +83,11 @@
                         <td style='text-align:left;'>{{ item.author_resnum }}</td>
                         <td style='text-align:left;'>{{ item.gene }}</td>
                         <td style='text-align:left;'>{{ item.pdb_species }}</td>
-                        <td style='text-align:left;'>{{ item.cdr_length }}</td>
+                        <td style='text-align:left;'><a href="{{ url_for('uniqueQuery', queryname=item.cdr_length, settings='cdr_length') }}" target="_blank">{{ item.cdr_length }}</a></td>
                         <td style='text-align:left;'>{{ item.aho_resnum }}</td>
-                        <td style='text-align:left;'>{{ item.cluster }}</td>
+                        <td style='text-align:left;'><a href="{{ url_for('uniqueQuery', queryname=item.cluster, settings='cluster') }}" target="_blank">{{ item.cluster }}</a></td>
                         <td style='text-align:left;'>{{ item.distance }}</td>
-                        <td style='text-align:left;'>{{ item.cdr_germline }}</td>
+                        <td style='text-align:left;'><a href="{{ url_for('uniqueQuery', queryname=item.cdr_germline, settings='germline') }}" target="_blank">{{ item.cdr_germline }}</a></td>
                         <td style='text-align:left;'>{{ item.cdr_seqid }}</td>
                         <td style='text-align:left;'>{{ item.sequence }}</td>
                         <td style='text-align:left;'>{{ item.germline_sequence }}</td>

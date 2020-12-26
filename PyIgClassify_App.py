@@ -307,6 +307,29 @@ def uniqueQuery(settings,queryname):
         gene_unique=pd.Series(names[0] for names in gene_list).unique()
         return render_template('cdr_length.html',queryname=queryname,cdr_cdr_length=cdr_cdr_length,cdr_length_list=cdr_length_list,pdb_unique_count=pdb_unique_count,chain_count=chain_count,pdb_species_unique=pdb_species_unique,gene_unique=gene_unique)
 
+    if settings=='germline':
+        queryname=queryname.split('*')[0]
+        germline_list=perVRegion.query.filter(perVRegion.vh_framework.contains(queryname)).all()
+        if germline_list:    #First check for VH germline and then for VL
+            return render_template('germline.html',queryname=queryname,germline_list=germline_list)
+        else:
+            germline_list=perVRegion.query.filter(perVRegion.vl_framework.contains(queryname)).all()
+            return render_template('germline.html',queryname=queryname,germline_list=germline_list)
+        
+    if settings=='frame_germline':
+        queryname=queryname.split('*')[0]
+        germline_list=perCDR.query.filter(perCDR.frame_germline.contains(queryname)).all()
+           
+        return render_template('germline.html',queryname=queryname,germline_list=germline_list)
+    
+    if settings=='cdr_germline':
+        queryname=queryname.split('*')[0]
+        germline_list=perCDR.query.filter(perCDR.cdr_germline.contains(queryname)).all()
+           
+        return render_template('germline.html',queryname=queryname,germline_list=germline_list)
+            
+        
+
 @app.route('/multipleQuery/<h1Select>/<l1Select>/<h2Select>/<l2Select>/<h3Select>/<l3Select>')
 def multipleQuery(h1Select,l1Select,h2Select,l2Select,h3Select,l3Select):
         if h1Select=='All':

@@ -34,11 +34,11 @@
                         <th scope="col" style='text-align:left;'>Cluster</th>
                         <th scope="col" style='text-align:left;'>PDB Species</th>
                         <th scope="col" style='text-align:left;'>Frame Germline</th>
-                        <th scope="col" style='text-align:left;'>Frame Germline %id</th>
+                        <th scope="col" style='text-align:left;'>Frame Germline Seqid</th>
                         <th scope="col" style='text-align:left;'>Author Resnum</th>
                         <th scope="col" style='text-align:left;'>Distance</th>
                         <th scope="col" style='text-align:left;'>CDR germline</th>
-                        <th scope="col" style='text-align:left;'>CDR %id</th>
+                        <th scope="col" style='text-align:left;'>CDR Seqid</th>
                         <th scope="col" style='text-align:left;'>Graft</th>
                         <th scope="col" style='text-align:left;'>Sequence</th>
                         <th scope="col" style='text-align:left;'>Germline Sequence</th>
@@ -50,15 +50,15 @@
                       {% for item in cdr_length_list %}
                       <tr style="line-height:20px;">
                         <td><a href="{{ url_for('uniqueQuery', queryname=item.pdb, settings='PDB') }}" target="_blank">{{ item.pdb }}{{ item.chain }}</a></td>
-                        <td style='text-align:left;'></td>
+                        <td style='text-align:left;'>{{ item.resolution }}</td>
                         <td style='text-align:left;'>{{ item.gene }}</td>
                         <td style='text-align:left;'><a href="{{ url_for('uniqueQuery', queryname=item.cluster, settings='cluster') }}" target="_blank">{{ item.cluster }}</a></td>
                         <td style='text-align:left;'>{{ item.pdb_species }}</td>
-                        <td style='text-align:left;'></td>
+                        <td style='text-align:left;'><a href="{{ url_for('uniqueQuery', queryname=item.frame_germline, settings='frame_germline') }}" target="_blank">{{ item.frame_germline }}</a></td>
                         <td style='text-align:left;'></td>
                         <td style='text-align:left;'>{{ item.author_resnum }}</td>
                         <td style='text-align:left;'>{{ item.distance }}</td>
-                        <td style='text-align:left;'></td>
+                        <td style='text-align:left;'><a href="{{ url_for('uniqueQuery', queryname=item.cdr_germline, settings='cdr_germline') }}" target="_blank">{{ item.cdr_germline }}</a></td>
                         <td style='text-align:left;'>{{ item.cdr_seqid }}</td>
                         <td style='text-align:left;'></td>
                         <td style='text-align:left;'>{{ item.sequence }}</td>

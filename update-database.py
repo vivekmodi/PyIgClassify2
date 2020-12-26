@@ -16,7 +16,9 @@ from datetime import datetime
 today=str(datetime.now())[0:10].strip()
 
 df=pd.read_csv('PerVRegion_df.csv',sep=',',header='infer')
-#df['Cluster'].fillna('None',inplace=True)
+df['H1 Cluster'].fillna('NA',inplace=True);df['H2 Cluster'].fillna('NA',inplace=True);df['H3 Cluster'].fillna('NA',inplace=True)
+df['L1 Cluster'].fillna('NA',inplace=True);df['L2 Cluster'].fillna('NA',inplace=True);df['L3 Cluster'].fillna('NA',inplace=True)
+df['VH Framework'].fillna('NA',inplace=True);df['VL Framework'].fillna('NA',inplace=True)
 db.drop_all()
 db.create_all()
 for i in df.index:
@@ -29,29 +31,32 @@ for i in df.index:
                         vh_framework=df.at[i,'VH Framework'],\
                         vh_framework_seqid=df.at[i,'VH Framework Seqid'],\
                         h1_cluster=df.at[i,'H1 Cluster'],\
-                        h1_cluster_distance=df.at[i,'H1 Cluster Distance'],\
+                        h1_cluster_distance=round(df.at[i,'H1 Cluster Distance'],2),\
                         h1_seqid=df.at[i,'H1 Seqid'],\
                         h2_cluster=df.at[i,'H2 Cluster'],\
-                        h2_cluster_distance=df.at[i,'H2 Cluster Distance'],\
+                        h2_cluster_distance=round(df.at[i,'H2 Cluster Distance'],2),\
                         h2_seqid=df.at[i,'H2 Seqid'],\
                         h3_cluster=df.at[i,'H3 Cluster'],\
-                        h3_cluster_distance=df.at[i,'H3 Cluster Distance'],\
+                        h3_cluster_distance=round(df.at[i,'H3 Cluster Distance'],2),\
                         vl_chain=df.at[i,'VL Chain'],\
                         vl_framework=df.at[i,'VL Framework'],\
                         vl_framework_seqid=df.at[i,'VL Framework Seqid'],\
                         l1_cluster=df.at[i,'L1 Cluster'],\
-                        l1_cluster_distance=df.at[i,'L1 Cluster Distance'],\
+                        l1_cluster_distance=round(df.at[i,'L1 Cluster Distance'],2),\
                         l1_seqid=df.at[i,'L1 Seqid'],\
                         l2_cluster=df.at[i,'L2 Cluster'],\
-                        l2_cluster_distance=df.at[i,'L2 Cluster Distance'],\
+                        l2_cluster_distance=round(df.at[i,'L2 Cluster Distance'],2),\
                         l2_seqid=df.at[i,'L2 Seqid'],\
                         l3_cluster=df.at[i,'L3 Cluster'],\
-                        l3_cluster_distance=df.at[i,'L3 Cluster Distance'])
+                        l3_cluster_distance=round(df.at[i,'L3 Cluster Distance'],2))
 
     db.session.add(v_region)
     db.session.commit()
 
 df=pd.read_csv('PerCDR_df.csv',sep=',',header='infer')
+df['Cluster'].fillna('NA',inplace=True)
+df['Frame Germline'].fillna('NA',inplace=True);df['CDR Germline'].fillna('NA',inplace=True)
+
 for i in df.index:
     df.at[i,'PDB']=df.at[i,'PDB'].upper()
     df.at[i,'PDB_chain_cdr']=f"{df.at[i,'PDB']}_{df.at[i,'Chain']}_{df.at[i,'CDR']}"
@@ -69,7 +74,7 @@ for i in df.index:
                    pdb_species=df.at[i,'PDB Species'],\
                    frame_germline=df.at[i,'Frame Germline'],\
                    cluster=df.at[i,'Cluster'],\
-                   distance=df.at[i,'Distance'],\
+                   distance=round(df.at[i,'Distance'],2),\
                    cdr_germline=df.at[i,'CDR Germline'],\
                    cdr_seqid=df.at[i,'CDR seqid'],\
                    rama4=df.at[i,'Rama4'],\
