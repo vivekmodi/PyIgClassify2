@@ -61,13 +61,11 @@
                     <thead class="thead-light">
                       <tr>
                         <th scope="col" style='text-align:left;'>Chain</th>
+                        <th scope="col" style='text-align:left;'>Author Resnum</th>
                         <th scope="col" style='text-align:left;'>Gene</th>
                         <th scope="col" style='text-align:left;'>Species</th>
-                        <th scope="col" style='text-align:left;'>Frame Germline</th>
-                        <th scope="col" style='text-align:left;'>Frame Germline %id</th>
-                        <th scope="col" style='text-align:left;'>CDR</th>
-                        <th scope="col">Length</th>
-                        <th scope="col" style='text-align:left;'>SeqStart - SeqEnd</th>
+                        <th scope="col">CDR-Length</th>
+                        <th scope="col">AHO Resnum</th>
                         <th scope="col" style='text-align:left;'>Cluster</th>
                         <th scope="col" style='text-align:left;'>Distance</th>
                         <th scope="col" style='text-align:left;'>CDR germline</th>
@@ -75,26 +73,28 @@
                         <th scope="col" style='text-align:left;'>Sequence</th>
                         <th scope="col" style='text-align:left;'>Germline Sequence</th>
                         <th scope="col" style='text-align:left;'>Rama</th>
+                        <th scope="col" style='text-align:left;'>Beta Turns</th>
+                        <th scope="col" style='text-align:left;'>Minimum EDIA</th>
                       </tr>
                     </thead>
                       {% for item in pdb_list %}
                       <tr style="line-height:20px;">
-                        <td style='text-align:left;'>{{ item.original_chain }}</td>
+                        <td style='text-align:left;'>{{ item.chain }}</td>
+                        <td style='text-align:left;'>{{ item.author_resnum }}</td>
                         <td style='text-align:left;'>{{ item.gene }}</td>
-                        <td style='text-align:left;'>{{ item.species }}</td>
-                        <td style='text-align:left;'>{{ item.IG }}</td>
-                        <td style='text-align:left;'>{{ item.Gpercent}}</td>
-                        <td><a href="{{ url_for('uniqueQuery', queryname=item.CDR, settings='CDR') }}" target="_blank">{{ item.CDR }}</td>
-                        <td><a href="{{ url_for('uniqueQuery', queryname=item.CDR_length, settings='CDR_length') }}" target="_blank">{{ item.length }}</td>
-                        <td style='text-align:left;'>{{ item.SeqStart }} - {{ item.SeqEnd }}</td>
-                        <td style='text-align:left;'><a href="{{ url_for('uniqueQuery', queryname=item.fullcluster, settings='fullcluster') }}" target="_blank">{{ item.fullcluster }}</td>
-                        <td style='text-align:left;'>{{ item.DistDegree }}</td>
-                        <td style='text-align:left;'></td>
-                        <td style='text-align:left;'></td>
-                        <td style='text-align:left;'>{{ item.seq }}</td>
-                        <td style='text-align:left;'></td>
-                        <td style='text-align:left;'>{{ item.rama }}</td>
-                    </tr>
+                        <td style='text-align:left;'>{{ item.pdb_species }}</td>
+                        <td style='text-align:left;'>{{ item.cdr_length }}</td>
+                        <td style='text-align:left;'>{{ item.aho_resnum }}</td>
+                        <td style='text-align:left;'>{{ item.cluster }}</td>
+                        <td style='text-align:left;'>{{ item.distance }}</td>
+                        <td style='text-align:left;'>{{ item.cdr_germline }}</td>
+                        <td style='text-align:left;'>{{ item.cdr_seqid }}</td>
+                        <td style='text-align:left;'>{{ item.sequence }}</td>
+                        <td style='text-align:left;'>{{ item.germline_sequence }}</td>
+                        <td style='text-align:left;'>{{ item.rama4 }}</td>
+                        <td style='text-align:left;'>{{ item.beta_turns }}</td>
+                        <td style='text-align:left;'>{{ item.minimum_edia }}</td>
+                        </tr>
                     {% endfor %}
         </table>
       </div>

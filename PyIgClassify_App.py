@@ -41,58 +41,89 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 Migrate(app,db)
 
+class perVRegion(db.Model):
+    pdb_heavy_light_chain=db.Column(db.Text,primary_key=True)
+    pdb=db.Column(db.Text)
+    vh_chain=db.Column(db.Text)
+    vh_framework=db.Column(db.Text)
+    vh_framework_seqid=db.Column(db.REAL)
+    h1_cluster=db.Column(db.Text)
+    h1_cluster_distance=db.Column(db.REAL)
+    h1_seqid=db.Column(db.REAL)
+    h2_cluster=db.Column(db.Text)
+    h2_cluster_distance=db.Column(db.REAL)
+    h2_seqid=db.Column(db.REAL)
+    h3_cluster=db.Column(db.Text)
+    h3_cluster_distance=db.Column(db.REAL)
+#   h3_seqid=db.Column(db.REAL)     #No seqid for H3
+    vl_chain=db.Column(db.Text)
+    vl_framework=db.Column(db.Text)
+    vl_framework_seqid=db.Column(db.REAL)
+    l1_cluster=db.Column(db.Text)
+    l1_cluster_distance=db.Column(db.REAL)
+    l1_seqid=db.Column(db.REAL)
+    l2_cluster=db.Column(db.Text)
+    l2_cluster_distance=db.Column(db.REAL)
+    l2_seqid=db.Column(db.REAL)
+    l3_cluster=db.Column(db.Text)
+    l3_cluster_distance=db.Column(db.REAL)
+#   l3_seqid=db.Column(db.REAL)     #No seqid for L3
+    
+    def __init__(self,pdb_heavy_light_chain,pdb,vh_chain,vh_framework,vh_framework_seqid,h1_cluster,h1_cluster_distance,h1_seqid,\
+                 h2_cluster,h2_cluster_distance,h2_seqid,h3_cluster,h3_cluster_distance,vl_chain,vl_framework,vl_framework_seqid,\
+                 l1_cluster,l1_cluster_distance,l1_seqid,l2_cluster,l2_cluster_distance,l2_seqid,l3_cluster,l3_cluster_distance):
+        
+        self.pdb_heavy_light_chain=pdb_heavy_light_chain;self.pdb=pdb;self.vh_chain=vh_chain;self.vh_framework=vh_framework;self.vh_framework_seqid=vh_framework_seqid;
+        self.h1_cluster=h1_cluster;self.h1_cluster_distance=h1_cluster_distance;self.h1_seqid=h1_seqid;
+        self.h2_cluster=h2_cluster;self.h2_cluster_distance=h2_cluster_distance;self.h2_seqid=h2_seqid;self.h3_cluster=h3_cluster;self.h3_cluster_distance=h3_cluster_distance;
+        self.vl_chain=vl_chain;self.vl_framework=vl_framework;self.vl_framework_seqid=vl_framework_seqid;
+        self.l1_cluster=l1_cluster;self.l1_cluster_distance=l1_cluster_distance;self.l1_seqid=l1_seqid;self.l2_cluster=l2_cluster;self.l2_cluster_distance=l2_cluster_distance;
+        self.l2_seqid=l2_seqid;self.l3_cluster=l3_cluster;self.l3_cluster_distance=l3_cluster_distance
+
+
+    def __repr__(self):
+        return f'{self.pdb_heavy_light_chain} {self.pdb} {self.vh_chain} {self.vh_framework} {self.vh_framework_seqid} {self.h1_cluster} {self.h1_cluster_distance}\
+            {self.h1_seqid} {self.h2_cluster} {self.h2_cluster_distance} {self.h2_seqid} {self.h3_cluster} {self.h3_cluster_distance} {self.vl_chain} {self.vl_framework}\
+            {self.vl_framework_seqid} {self.l1_cluster} {self.l1_cluster_distance} {self.l1_seqid} {self.l2_cluster} {self.l2_cluster_distance} {self.l2_seqid}\
+            {self.l3_cluster} {self.l3_cluster_distance}'
+
 class perCDR(db.Model):
-    pdb_chain_cdr=db.Column(db.Text,primary_key=True)    #Might not be unique, check with Roland
+    pdb_chain_cdr=db.Column(db.Text,primary_key=True)
     cdr=db.Column(db.Text)
     cdr_length=db.Column(db.Text)
     pdb=db.Column(db.Text)
     chain=db.Column(db.Text)
+    resolution=db.Column(db.REAL)
     aho_resnum=db.Column(db.Text)
     author_resnum=db.Column(db.Text)
     sequence=db.Column(db.Text)
     germline_sequence=db.Column(db.Text)
     gene=db.Column(db.Text)
     pdb_species=db.Column(db.Text)
+    frame_germline=db.Column(db.Text)
     cluster=db.Column(db.Text)
     distance=db.Column(db.REAL)
     cdr_germline=db.Column(db.Text)
-    cdr_seqid=db.Column(db.REAL)
+    cdr_seqid=db.Column(db.Text)   #There are - in records so can not use REAL e.g. 1a2y
     rama4=db.Column(db.Text)
     beta_turns=db.Column(db.Text)
-    minimum_edia=db.Column(db.REAL)
+    minimum_edia=db.Column(db.Text)
     keywords=db.Column(db.Text)
-
-
-    def __init__(self,pdb_chain_cdr,cdr,cdr_length,pdb,chain,aho_resnum,author_resnum,sequence,germline_sequence,gene,pdb_species,cluster,distance,cdr_germline,cdr_seqid,\
-                rama4,beta_turns,minimum_edia,keywords):
-                self.pdb_chain_cdr=pdb_chain_cdr;self.cdr=cdr;self.cdr_length=cdr_length;self.pdb=pdb;self.chain=chain;self.aho_resnum=aho_resnum;self.author_resnum=author_resnum;\
-                self.sequence=sequence;self.germline_sequence=germline_sequence;self.gene=gene;self.pdb_species=pdb_species;self.cluster=cluster;self.distance=distance;\
-                self.cdr_germline=cdr_germline;self.cdr_seqid=cdr_seqid;self.rama4=rama4;self.beta_turns=beta_turns;self.minimum_edia=minimum_edia;self.keywords=keywords
-
-
+    
+    def __init__(self,pdb_chain_cdr,cdr,cdr_length,pdb,chain,resolution,aho_resnum,author_resnum,sequence,germline_sequence,gene,pdb_species,\
+                 frame_germline,cluster,distance,cdr_germline,cdr_seqid,rama4,beta_turns,minimum_edia,keywords):
+        
+        self.pdb_chain_cdr=pdb_chain_cdr;self.cdr=cdr;self.cdr_length=cdr_length;self.pdb=pdb;self.chain=chain;self.resolution=resolution;
+        self.aho_resnum=aho_resnum;self.author_resnum=author_resnum;self.sequence=sequence;self.germline_sequence=germline_sequence;
+        self.gene=gene;self.pdb_species=pdb_species;self.frame_germline=frame_germline;self.cluster=cluster;self.distance=distance;
+        self.cdr_germline=cdr_germline;self.cdr_seqid=cdr_seqid;self.rama4=rama4;self.beta_turns=beta_turns;self.minimum_edia=minimum_edia;
+        self.keywords=keywords
+    
     def __repr__(self):
-        return f'{self.pdb_chain_cdr} {self.cdr} {self.cdr_length} {self.pdb} {self.chain} {self.aho_resnum} {self.author_resnum} {self.sequence} {self.germline_sequence}\
-                 {self.gene} {self.pdb_species} {self.cluster} {self.distance} {self.cdr_germline} {self.cdr_seqid} {self.rama4} {self.beta_turns}\
-                 {self.minimum_edia} {self.keywords}'
-
-class PDBrows(db.Model):
-    pdb=db.Column(db.Text,primary_key=True)
-    heavy_chain=db.Column(db.Text)
-    light_chain=db.Column(db.Text)
-    h1cluster=db.Column(db.Text)
-    l1cluster=db.Column(db.Text)
-    h2cluster=db.Column(db.Text)
-    l2cluster=db.Column(db.Text)
-    h3cluster=db.Column(db.Text)
-    l3cluster=db.Column(db.Text)
-
-    def __init__(self,pdb,heavy_chain,light_chain,h1cluster,l1cluster,h2cluster,l2cluster,h3cluster,l3cluster):
-        self.pdb=pdb;self.heavy_chain=heavy_chain;self.light_chain=light_chain;self.h1cluster=h1cluster;self.l1cluster=l1cluster;
-        self.h2cluster=h2cluster;self.l2cluster=l2cluster;self.h3cluster=h3cluster;self.l3cluster=l3cluster
-
-    def __repr__(self):
-        return f'{self.pdb} {self.heavy_chain} {self.light_chain} {self.h1cluster} {self.l1cluster} {self.h2cluster} {self.l2cluster}\
-            {self.h3cluster} {self.l3cluster}'
+        return f'{self.pdb_chain_cdr} {self.cdr} {self.cdr_length} {self.pdb} {self.chain} {self.resolution} {self.aho_resnum} {self.author_resnum}\
+            {self.sequence} {self.germline_sequence} {self.gene} {self.pdb_species} {self.frame_germline} {self.cluster} {self.distance} {self.cdr_germline}\
+            {self.cdr_seqid} {self.rama4} {self.beta_turns} {self.minimum_edia} {self.keywords}'
+    
 
 def create_lists():
     pdbListDb=list();chainListDb=list();clusterListDb=list()
@@ -133,7 +164,7 @@ def about():
 
 @app.route('/browse')
 def browse():
-    retrieve_all=PDBrows.query.all()
+    retrieve_all=perVRegion.query.all()
     return render_template('browse.html',retrieve_all=retrieve_all)
 
 @app.route('/statistics')
@@ -223,7 +254,7 @@ def uniqueQuery(settings,queryname):
         pdb_list=perCDR.query.filter(perCDR.pdb.contains(queryname)).all()
         pdb_count=perCDR.query.filter(perCDR.pdb.contains(queryname)).count()
         pdb_resolution=perCDR.query.filter(perCDR.pdb.contains(queryname)).with_entities('resolution').first()[0]
-        pdb_rfactor=perCDR.query.filter(perCDR.pdb.contains(queryname)).with_entities('rfactor').first()[0]
+        
         vh_gene=perCDR.query.filter(perCDR.pdb.contains(queryname),perCDR.cdr.contains('H')).with_entities('gene').first()[0]
         vl_gene=perCDR.query.filter(perCDR.pdb.contains(queryname),perCDR.cdr.contains('L')).with_entities('gene').first()[0]
         vh_chainid=perCDR.query.filter(perCDR.pdb.contains(queryname),perCDR.cdr.contains('H')).with_entities('chain').first()[0]   #Might not be always true; what if there are two heavy chains in the PDB?
@@ -232,7 +263,7 @@ def uniqueQuery(settings,queryname):
         vl_species=perCDR.query.filter(perCDR.pdb.contains(queryname),perCDR.cdr.contains('L')).with_entities('pdb_species').first()[0]
 
 
-        return render_template('pdbs.html',queryname=queryname,pdb_list=pdb_list,pdb_count=pdb_count,pdb_resolution=pdb_resolution,pdb_rfactor=pdb_rfactor,\
+        return render_template('pdbs.html',queryname=queryname,pdb_list=pdb_list,pdb_count=pdb_count,pdb_resolution=pdb_resolution,\
                                vh_gene=vh_gene,vl_gene=vl_gene,vh_chainid=vh_chainid,vl_chainid=vl_chainid,vh_species=vh_species,vl_species=vl_species)
 
     if settings=='cluster':
