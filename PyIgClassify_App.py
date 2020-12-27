@@ -277,7 +277,7 @@ def uniqueQuery(settings,queryname):
         seq_in_cluster=perCDR.query.filter(perCDR.cluster.contains(queryname)).with_entities('sequence')
         seq_unique_count=len(pd.Series(names[0] for names in seq_in_cluster).unique())
         pdb_species_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).with_entities('pdb_species')
-        pdb_species_unique=pd.Series(names[0] for names in pdb_species_list).unique()
+        pdb_species_unique=pd.Series(names[0] for names in pdb_species_list).sort_values().unique()
         gene_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).with_entities('gene')
         gene_unique=pd.Series(names[0] for names in gene_list).unique()
         rama_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).with_entities('rama4')

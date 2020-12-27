@@ -89,11 +89,14 @@ th {
 .nav-pills .nav-link {
     /* background-color: #A688AD;
     background-color: #9A9EB9; */
-    background-color: #797596;
+    background-color: #565178;
     color: white;
 }
 
-
+.nav-pills a:hover {
+  text-decoration: underline;
+  color: white;
+}
 
 
 
@@ -162,18 +165,17 @@ a {
   /* font-weight: bold; */
   /* text-decoration: underline; */
   /* color:#138b9e; */
-  color: #0683bf;
+  color: #4c869e;  /*#0683bf;*/
 }
 
 a:hover {
   text-decoration: underline;
-  color: white;
-  /* color: #F2F5F4; */
-  /* color: #E9B9B7; */
+  /* color: white;  */
 }
 
 .button-primary:hover {
   color: white;
+  text-decoration: underline;
 
 }
 
@@ -226,7 +228,7 @@ a:hover {
   line-height: 6rem;
   font-size: 2rem;
   border-radius: 50%;
-  background: #797596;
+  background: #565178;
   color: #fff;
   font-family: "Helvetica Neue", sans-serif;
   font-weight: 100;
@@ -276,18 +278,25 @@ a:hover {
 }
 /*End code for progress bar*/
 
-/* .navbar a:hover {
+.navbar a:hover {
   text-decoration: underline;
-  font-weight: bold;
-  color: #F2F5F4;
-} */
+  color: white;
+}
 /* It is necessary to provide size otherwise webgl element does not appear on screen. */
 
+.vertical-line{
+      width: 1px; /* Line width */
+      background-color: black; /* Line color */
+      height: 100%; /* Override in-line if you want specific height. */
+      float: left; /* Causes the line to float to left of content.
+        You can instead use position:absolute or display:inline-block
+        if this fits better with your design */
+    }
 
-
-.dark-background          { background: #797596; }    /*Rhythm*/
+.dark-background          { background: #565178; }    /*Rhythm old #797596*/
+.dark-background-trans    { background: rgba(86, 81, 120, 0.6); }
 .dark-text                { color: #797596; } /*Rhythm*/
-.very-dark-text           { color: #OB1D51  } /*old #455A64*/
+.very-dark-text           { color: #3b444b  } /*Soft grey*/
 .light-blue-background    { background: #D1E1E8; }
 .light-text               { color: #F2F5F4; }
 .brand-background         { background: #0B1D51; }   /*Royal Blue Dark*/
@@ -295,9 +304,9 @@ a:hover {
 .light-accent-background  { background: #E08773; }
 .light-accent-text        { color: #E08773; }
 .dark-accent-background   { background: #A688AD; }
-.dark-accent-text         { color: #A688AD; }
+.dark-accent-text         { color: #7a72ab; }
 .divider-color            { border-color: #BDBDBD; }
 .text-info                { color: #547eb4; }
 .light-grey-background     { background: rgba(189, 189, 189,0.2);  }
 .button-download           {background: #17a2b8;}
-.button-primary           {background: #797596;color:white;}    /*old blue color #157ce8 */
+.button-primary           {background: #565178;color:white;}    /*old blue color #157ce8 */
