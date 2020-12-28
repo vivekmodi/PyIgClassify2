@@ -126,14 +126,31 @@ class perCDR(db.Model):
     
 
 def create_lists():
-    pdbListDb=list();chainListDb=list();clusterListDb=list()
+    pdbListDb=list();chainListDb=list();clusterListDb=list();clusterChainCount=dict()
     for pdbs in perCDR.query.with_entities(perCDR.pdb_chain_cdr):
         pdbid,chainid,cdr=pdbs[0].split('_')
         pdbListDb.append(pdbid);chainListDb.append(pdbid+chainid);
     for cluster in perCDR.query.with_entities(perCDR.cluster):
         clusterListDb.append(cluster[0])
-    clusterListDb=list(set(sorted(clusterListDb)))
-    return pdbListDb,chainListDb,clusterListDb
+        cdr_length='-'.join(cluster[0].split('-')[0:2])  #Get the first two element after the split like H1-10 from H1-10-1
+        clusterListDb.append(cdr_length+'-All clus')
+        
+    clusterListDb=list(natsorted(set(sorted(clusterListDb))))
+    
+    for cluster in clusterListDb:
+        if 'clus' in cluster:
+            cluster=cluster.replace('-All clus','')
+            clusterChainCount[cluster+'-All clus']=perCDR.query.filter(perCDR.cluster.contains(cluster)).count()
+        else:
+            clusterChainCount[cluster]=perCDR.query.filter(perCDR.cluster.contains(cluster)).count()
+        
+    clusterChainCount['H1-All']=perCDR.query.filter(perCDR.cluster.contains('H1')).count()
+    clusterChainCount['H2-All']=perCDR.query.filter(perCDR.cluster.contains('H2')).count()
+    clusterChainCount['H3-All']=perCDR.query.filter(perCDR.cluster.contains('H3')).count()
+    clusterChainCount['L1-All']=perCDR.query.filter(perCDR.cluster.contains('L1')).count()
+    clusterChainCount['L2-All']=perCDR.query.filter(perCDR.cluster.contains('L2')).count()
+    clusterChainCount['L3-All']=perCDR.query.filter(perCDR.cluster.contains('L3')).count()
+    return pdbListDb,chainListDb,clusterListDb, clusterChainCount
 
 def percent_loop_length(chain_count,queryname):
     (cdr,length,cluster)=queryname.split('-')      #How to split in clusters with 'cis' in the name? 
@@ -170,7 +187,7 @@ def browse():
 @app.route('/statistics')
 def statistics():
     pdb_species_unique=dict();gene_unique=dict();entries=dict()
-    (pdbListDb,chainListDb,clusterListDb)=create_lists()
+    (pdbListDb,chainListDb,clusterListDb,clusterChainCount)=create_lists()
     for cluster in clusterListDb:
         #cluster_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).all()
         entries[cluster]=perCDR.query.filter(perCDR.cluster.contains(cluster)).count()
@@ -184,7 +201,7 @@ def statistics():
 
 @app.route('/formSearch', methods=['GET','POST'])
 def formSearch():
-    (pdbListDb,chainListDb,clusterListDb)=create_lists()
+    (pdbListDb,chainListDb,clusterListDb,clusterChainCount)=create_lists()
 
     if request.method=='POST':
         inputString=request.form['inputString'].upper()
@@ -196,19 +213,20 @@ def formSearch():
         else:
             return render_template('nomatch.html')
 
-    return render_template('search.html')
+    return render_template('search.html', clusterListDb=clusterListDb, clusterChainCount=clusterChainCount)
 
 @app.route('/formSearchMultiple',methods=['GET','POST'])
 def formSearchMultiple():
+    (pdbListDb,chainListDb,clusterListDb,clusterChainCount)=create_lists()
     if request.method=='POST':
-        h1Select=request.form['h1Select']
-        l1Select=request.form['l1Select']
-        h2Select=request.form['h2Select']
-        l2Select=request.form['l2Select']
-        h3Select=request.form['h3Select']
-        l3Select=request.form['l3Select']
-        return redirect(url_for('multipleQuery',h1Select=h1Select,l1Select=l1Select,h2Select=h2Select,l2Select=l2Select,h3Select=h3Select,l3Select=l3Select))
-    return render_template ('search.html')
+        cdr_select=request.form['cdr_select']
+        
+        if 'All' in cdr_select:
+            cdr_select=cdr_select[0:-4]
+            return redirect(url_for('uniqueQuery',settings='cdr',queryname=cdr_select))
+        else:
+            return redirect(url_for('uniqueQuery',settings='cluster',queryname=cdr_select))
+    return render_template ('search.html', clusterListDb=clusterListDb)
 
 @app.route('/formSearchMultipleCDR',methods=['GET','POST'])
 def formSearchMultipleCDR():
@@ -330,45 +348,26 @@ def uniqueQuery(settings,queryname):
             
         
 
-@app.route('/multipleQuery/<h1Select>/<l1Select>/<h2Select>/<l2Select>/<h3Select>/<l3Select>')
-def multipleQuery(h1Select,l1Select,h2Select,l2Select,h3Select,l3Select):
+@app.route('/multipleQuery/<h1Select>/')
+def multipleQuery(h1Select):
         if h1Select=='All':
             h1Select=''    #Does not match None, so skips the rows in which h1cluster value is missing - change in future
-        if l1Select=='All':
-            l1Select=''
-        if h2Select=='All':
-            h2Select=''
-        if l2Select=='All':
-            l2Select=''
-        if h3Select=='All':
-            h3Select=''
-        if l3Select=='All':
-            l3Select=''
+       
 
-        cluster_list=PDBrows.query.filter(PDBrows.h1cluster.contains(h1Select),PDBrows.l1cluster.contains(l1Select),\
-                                          PDBrows.h2cluster.contains(h2Select),PDBrows.l2cluster.contains(l2Select),\
-                                          PDBrows.h3cluster.contains(h3Select),PDBrows.l3cluster.contains(l3Select),).all()
+        #cluster_list=perCDR.query.filter(perCDR.cluster.contains(h1Select)).all()
+        queryname=h1Select
+        cluster_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).all()
+        print(f'H1select is {h1Select}')
 
-        return render_template('clusterquery.html',cluster_list=cluster_list)
+        return render_template('cluster.html',queryname=queryname,cluster_list=cluster_list)
 
-@app.route('/multipleQueryCDR/<h1CDRSelect>/<l1CDRSelect>/<h2CDRSelect>/<l2CDRSelect>/<h3CDRSelect>/<l3CDRSelect>')
-def multipleQueryCDR(h1CDRSelect,l1CDRSelect,h2CDRSelect,l2CDRSelect,h3CDRSelect,l3CDRSelect):
+@app.route('/multipleQueryCDR/<h1CDRSelect>')
+def multipleQueryCDR(h1CDRSelect):
         if h1CDRSelect=='All':
             h1CDRSelect=''    #Does not match None, so skips the rows in which h1cluster value is missing - change in future
-        if l1CDRSelect=='All':
-            l1CDRSelect=''
-        if h2CDRSelect=='All':
-            h2CDRSelect=''
-        if l2CDRSelect=='All':
-            l2CDRSelect=''
-        if h3CDRSelect=='All':
-            h3CDRSelect=''
-        if l3CDRSelect=='All':
-            l3CDRSelect=''
+       
 
-        cluster_list=PDBrows.query.filter(PDBrows.h1cluster.contains(h1Select),PDBrows.l1cluster.contains(l1Select),\
-                                          PDBrows.h2cluster.contains(h2Select),PDBrows.l2cluster.contains(l2Select),\
-                                          PDBrows.h3cluster.contains(h3Select),PDBrows.l3cluster.contains(l3Select),).all()
+        cluster_list=perCDR.query.filter(perCDR.h1cluster.contains(h1CDRSelect)).all()
 
         return render_template('clusterquery.html',cluster_list=cluster_list)
 

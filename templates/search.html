@@ -28,97 +28,72 @@
         <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
           <h3 class="very-dark-text">Search by CDR cluster</h3>
           <form action="/formSearchMultiple" method="POST">
-            <div class="row">
-              <div class="col-lg-4">
                 <div class="form-group very-dark-text">
-                  <label for="h1Select">Select H1 Cluster</label>
-                  <select class="form-control" name="h1Select">
-                    <option value="All">All</option>
-                    <optgroup label="──────────">
-                      <option value="H1-10-*">H1-10-*</option>
-                      <option value="H1-10-1">H1-10-1</option>
-                      <option value="H1-10-cis5-*">H1-10-cis5-*</option>
-                      <option value="H1-11-*">H1-11-*</option>
-                      <option value="H1-12-*">H1-12-*</option>
-                      <option value="H1-12-1">H1-12-1</option>
-                      <option value="H1-13-*">H1-13-*</option>
-                    </optgroup>
-                  </select>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="form-group very-dark-text">
-                  <label for="h2Select">Select H2 Cluster</label>
-                  <select class="form-control" name="h2Select">
-                    <option value="All">All</option>
-                    <optgroup label="──────────">
-                      <option value="H2-10-*">H2-10-*</option>
-                      <option value="H2-10-1">H2-10-1</option>
-                      <option value="H2-10-2">H2-10-2</option>
-                      <option value="H2-10-3">H2-10-3</option>
-                      <option value="H2-10-4">H2-10-4</option>
-                    </optgroup>
-                  </select>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="form-group very-dark-text">
-                  <label for="h3Select">Select H3 Cluster</label>
-                  <select class="form-control" name="h3Select">
-                    <option value="All">All</option>
-                    <optgroup label="──────────">
-                      <option value="H3-10-*">H3-10-*</option>
-                      <option value="H3-10-cis10-*">H3-10-cis10-*</option>
-                      <option value="H3-10-cis5-*">H3-10-cis5-*</option>
-                      <option value="H3-10-cis6-*">H3-10-cis6-*</option>
-                      <option value="H3-10-cis7-*">H3-10-cis7-*</option>
-                    </optgroup>
-                  </select>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="form-group very-dark-text">
-                  <label for="l1Select">Select L1 Cluster</label>
-                  <select class="form-control" name="l1Select">
-                    <option value="All">All</option>
-                    <optgroup label="──────────">
-                      <option value="L1-10-*">L1-10-*</option>
-                      <option value="L1-10-1">L1-10-1</option>
-                      <option value="L1-10-2">L1-10-2</option>
-                      <option value="L1-11-*">L1-11-*</option>
-                    </optgroup>
-                  </select>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="form-group very-dark-text">
-                  <label for="l2Select">Select L2 Cluster</label>
-                  <select class="form-control" name="l2Select">
-                    <option value="All">All</option>
-                    <optgroup label="──────────">
-                      <option value="L2-12-*">L2-12-*</option>
-                      <option value="L2-12-1">L2-12-1</option>
-                      <option value="L2-12-2">L2-12-2</option>
-                      <option value="L2-12-cis12-*">L2-12-cis12-*</option>
-                    </optgroup>
-                  </select>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="form-group very-dark-text">
-                  <label for="l3Select">Select L3 Cluster</label>
-                  <select class="form-control" name="l3Select">
-                    <option value="All">All</option>
-                    <optgroup label="──────────">
-                      <option value="L3-10-*">L3-10-*</option>
-                      <option value="L3-10-1">L3-10-1</option>
-                      <option value="L3-10-cis2,7-*">L3-10-cis2,7-*</option>
-                      <option value="L3-10-cis5,6-*">L3-10-cis5,6-*</option>
-                    </optgroup>
-                  </select>
-                </div>
-              </div>
+                  <label for="cdr_select">Select CDR, CDR length or Cluster</label>
+                    <select class="selectpicker" data-live-search="true" data-width="100%" name="cdr_select">
+                      <option value="All">All</option>
 
+                      <optgroup label="H1">
+                        <option value="H1-All" data-subtext="{{ clusterChainCount['H1-All'] }} chains">H1-All</option>
+                        <option disabled>──────────</option>
+                        {% for item in clusterListDb %}
+                        {% if 'H1' in item %}
+
+                        <option value="{{ item }}" data-subtext="{{ clusterChainCount[item] }} chains">{{ item }}</option>
+                        {% if 'clus' in item %}
+                        <option disabled>──────────</option>
+                        {% endif %}
+
+                        {% endif %}
+                        {% endfor %}
+                      </optgroup>
+                      <optgroup label="H2">
+                        <option value="H2-All" data-subtext="{{ clusterChainCount['H2-All'] }} chains">H2-All</option>
+                        <option disabled>──────────</option>
+                        {% for item in clusterListDb %}
+                        {% if 'H2' in item %}
+                        <option value="{{ item }}" data-subtext="{{ clusterChainCount[item] }} chains">{{ item }}</option>
+                        {% endif %}
+                        {% endfor %}
+                      </optgroup>
+                      <optgroup label="H3">
+                        <option value="H3-All" data-subtext="{{ clusterChainCount['H3-All'] }} chains">H3-All</option>
+                        <option disabled>──────────</option>
+                        {% for item in clusterListDb %}
+                        {% if 'H3' in item %}
+                        <option value="{{ item }}" data-subtext="{{ clusterChainCount[item] }} chains">{{ item }}</option>
+                        {% endif %}
+                        {% endfor %}
+                      </optgroup>
+                      <optgroup label="L1">
+                        <option value="L1-All" data-subtext="{{ clusterChainCount['L1-All'] }} chains">L1-All</option>
+                        <option disabled>──────────</option>
+                        {% for item in clusterListDb %}
+                        {% if 'L1' in item %}
+                        <option value="{{ item }}" data-subtext="{{ clusterChainCount[item] }} chains">{{ item }}</option>
+                        {% endif %}
+                        {% endfor %}
+                      </optgroup>
+                      <optgroup label="L2">
+                        <option value="L2-All" data-subtext="{{ clusterChainCount['L2-All'] }} chains">L2-All</option>
+                        <option disabled>──────────</option>
+                        {% for item in clusterListDb %}
+                        {% if 'L2' in item %}
+                        <option value="{{ item }}" data-subtext="{{ clusterChainCount[item] }} chains">{{ item }}</option>
+                        {% endif %}
+                        {% endfor %}
+                      </optgroup>
+                      <optgroup label="L3">
+                        <option value="L3-All" data-subtext="{{ clusterChainCount['L3-All'] }} chains">L3-All</option>
+                        <option disabled>──────────</option>
+                        {% for item in clusterListDb %}
+                        {% if 'L3' in item %}
+                        <option value="{{ item }}" data-subtext="{{ clusterChainCount[item] }} chains">{{ item }}</option>
+                        {% endif %}
+                        {% endfor %}
+                      </optgroup>
+
+                </select>
             </div>
 
             <button type="submit" class="btn button-primary light-text">Submit</button>
