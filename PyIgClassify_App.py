@@ -136,7 +136,7 @@ def create_lists():
     return pdbListDb,chainListDb,clusterListDb
 
 def percent_loop_length(chain_count,queryname):
-    (cdr,length,cluster)=queryname.split('-')
+    (cdr,length,cluster)=queryname.split('-')      #How to split in clusters with 'cis' in the name? 
     cdr_length=cdr+'_'+length
     cdr_length_count=perCDR.query.filter(perCDR.cdr_length.contains(cdr_length)).count()
     per_loop=round((chain_count/cdr_length_count)*100,2)
