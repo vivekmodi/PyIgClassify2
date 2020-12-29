@@ -126,23 +126,22 @@ class perCDR(db.Model):
     
 
 def create_lists():
-    pdbListDb=list();chainListDb=list();clusterListDb=list();clusterChainCount=dict()
+    pdbListDb=list();chainListDb=list();clusterListDb=list();clusterChainCount=dict();cluster_cdr_list=list()
     for pdbs in perCDR.query.with_entities(perCDR.pdb_chain_cdr):
         pdbid,chainid,cdr=pdbs[0].split('_')
         pdbListDb.append(pdbid);chainListDb.append(pdbid+chainid);
     for cluster in perCDR.query.with_entities(perCDR.cluster):
         clusterListDb.append(cluster[0])
+        cluster_cdr_list.append(cluster[0])
         cdr_length='-'.join(cluster[0].split('-')[0:2])  #Get the first two element after the split like H1-10 from H1-10-1
-        clusterListDb.append(cdr_length+'-All clus')
+        cluster_cdr_list.append(cdr_length)     #This list contains both clusters and cdr-lengths
         
     clusterListDb=list(natsorted(set(sorted(clusterListDb))))
+    cluster_cdr_list=list(natsorted(set(sorted(cluster_cdr_list))))
+    pdbListDb=list(natsorted(set(sorted(pdbListDb))))
     
-    for cluster in clusterListDb:
-        if 'clus' in cluster:
-            cluster=cluster.replace('-All clus','')
-            clusterChainCount[cluster+'-All clus']=perCDR.query.filter(perCDR.cluster.contains(cluster)).count()
-        else:
-            clusterChainCount[cluster]=perCDR.query.filter(perCDR.cluster.contains(cluster)).count()
+    for cluster in cluster_cdr_list:
+            clusterChainCount[cluster]=perCDR.query.filter(perCDR.cluster.contains(cluster)).count()  #Incorrect count for cdr-length due to substring mismatch
         
     clusterChainCount['H1-All']=perCDR.query.filter(perCDR.cluster.contains('H1')).count()
     clusterChainCount['H2-All']=perCDR.query.filter(perCDR.cluster.contains('H2')).count()
@@ -150,7 +149,7 @@ def create_lists():
     clusterChainCount['L1-All']=perCDR.query.filter(perCDR.cluster.contains('L1')).count()
     clusterChainCount['L2-All']=perCDR.query.filter(perCDR.cluster.contains('L2')).count()
     clusterChainCount['L3-All']=perCDR.query.filter(perCDR.cluster.contains('L3')).count()
-    return pdbListDb,chainListDb,clusterListDb, clusterChainCount
+    return pdbListDb,chainListDb,clusterListDb, clusterChainCount, cluster_cdr_list
 
 def percent_loop_length(chain_count,queryname):
     (cdr,length,cluster)=queryname.split('-')      #How to split in clusters with 'cis' in the name? 
@@ -167,7 +166,26 @@ def most_common_rama(rama_list):
         rama_dict[item]+=1
     most_common_rama_count=max(rama_dict.values())
     most_common_rama_string=max(rama_dict, key=lambda key: rama_dict[key]).rama4
-    return most_common_rama_count,most_common_rama_string    
+    return most_common_rama_count,most_common_rama_string 
+
+def write_text_file(sublist,tsvFile,cdr_format):
+    print(cdr_format)
+    fhandle_textFile=open(f'{pwd}/static/{tsvFile}','w')
+    if cdr_format:     #Header for perCDR files
+        fhandle_textFile.write('CDR\tCDR Length\tPDB\tChain\tResolution\tAHO Resnum\tAuthor Resnum\tSequence\tGermline Sequence\tGene\tPDB Species\tFrame Germline\tCluster\tDistance\tCDR Germline\tCDR Seqid\tRama4\tBeta Turns\tMinimum EDIA\n')
+        for item in sublist:
+            fhandle_textFile.write(f'{item.cdr}\t{item.cdr_length}\t{item.pdb}\t{item.chain}\t{item.resolution}\t{item.aho_resnum}\t\
+                                   {item.author_resnum}\t{item.sequence}\t{item.germline_sequence}\t{item.gene}\t{item.pdb_species}\t\
+                                   {item.frame_germline}\t{item.cluster}\t{item.distance}\t{item.cdr_germline}\t{item.cdr_seqid}\t\
+                                   {item.rama4}\t{item.beta_turns}\t{item.minimum_edia}\n')
+    
+    else:    #Header for perVRegion files
+        fhandle_textFile.write('PDB\tVH Chain\tVH Framework\tVH Framework Seqid\tH1 Cluster\tH1 Cluster Distance\tH1 Seqid\tH2 Cluster\tH2 Cluster Distance\tH2 Seqid\tH3 Cluster\tH3 Cluster Distance\tVL Chain\tVL Framework\tVL Framework Seqid\tL1 Cluster\tL1 Cluster Distance\tL1 Seqid\tL2 Cluster\tL2 Cluster Distance\tL2 Seqid\tL3 Cluster\tL3 Cluster Distance\n')
+        for item in sublist:
+            fhandle_textFile.write(f'{item.pdb}\t{item.vh_chain}\t{item.vh_framework}\t{item.vh_framework_seqid}\t{item.h1_cluster}\t{item.h1_cluster_distance}\t{item.h1_seqid}\t\
+                 {item.h2_cluster}\t{item.h2_cluster_distance}\t{item.h2_seqid}\t{item.h3_cluster}\t{item.h3_cluster_distance}\t{item.vl_chain}\t{item.vl_framework}\t{item.vl_framework_seqid}\t\
+                 {item.l1_cluster}\t{item.l1_cluster_distance}\t{item.l1_seqid}\t{item.l2_cluster}\t{item.l2_cluster_distance}\t{item.l2_seqid}\t{item.l3_cluster}\t{item.l3_cluster_distance}\n')
+    fhandle_textFile.close()
     
 @app.route('/index')
 @app.route('/home')
@@ -187,7 +205,7 @@ def browse():
 @app.route('/statistics')
 def statistics():
     pdb_species_unique=dict();gene_unique=dict();entries=dict()
-    (pdbListDb,chainListDb,clusterListDb,clusterChainCount)=create_lists()
+    (pdbListDb,chainListDb,clusterListDb,clusterChainCount,cluster_cdr_list)=create_lists()
     for cluster in clusterListDb:
         #cluster_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).all()
         entries[cluster]=perCDR.query.filter(perCDR.cluster.contains(cluster)).count()
@@ -201,45 +219,37 @@ def statistics():
 
 @app.route('/formSearch', methods=['GET','POST'])
 def formSearch():
-    (pdbListDb,chainListDb,clusterListDb,clusterChainCount)=create_lists()
+    (pdbListDb,chainListDb,clusterListDb,clusterChainCount,cluster_cdr_list)=create_lists()
 
     if request.method=='POST':
-        inputString=request.form['inputString'].upper()
+        inputString=request.form['pdb_select'].upper()
 
         if inputString in pdbListDb:    #match without chain
             return redirect(url_for('uniqueQuery',queryname=inputString,settings='PDB'))
-        if inputString in chainListDb:  #match with chain
-            return redirect(url_for('uniqueQuery',queryname=inputString,settings='PDB'))
+        #if inputString in chainListDb:  #match with chain
+        #    return redirect(url_for('uniqueQuery',queryname=inputString,settings='PDB'))
         else:
             return render_template('nomatch.html')
 
-    return render_template('search.html', clusterListDb=clusterListDb, clusterChainCount=clusterChainCount)
+    return render_template('search.html', pdbListDb=pdbListDb, clusterListDb=clusterListDb, clusterChainCount=clusterChainCount, cluster_cdr_list=cluster_cdr_list)
 
 @app.route('/formSearchMultiple',methods=['GET','POST'])
 def formSearchMultiple():
-    (pdbListDb,chainListDb,clusterListDb,clusterChainCount)=create_lists()
+    (pdbListDb,chainListDb,clusterListDb,clusterChainCount,cluster_cdr_list)=create_lists()
     if request.method=='POST':
         cdr_select=request.form['cdr_select']
         
-        if 'All' in cdr_select:
+        if cdr_select=='All':
+            return redirect(url_for('browse'))
+        elif 'All' in cdr_select:
             cdr_select=cdr_select[0:-4]
             return redirect(url_for('uniqueQuery',settings='cdr',queryname=cdr_select))
-        else:
+        elif cdr_select in clusterListDb:
             return redirect(url_for('uniqueQuery',settings='cluster',queryname=cdr_select))
-    return render_template ('search.html', clusterListDb=clusterListDb)
-
-@app.route('/formSearchMultipleCDR',methods=['GET','POST'])
-def formSearchMultipleCDR():
-    if request.method=='POST':
-        h1CDRSelect=request.form['h1CDRSelect']
-        l1CDRSelect=request.form['l1CDRSelect']
-        h2CDRSelect=request.form['h2CDRSelect']
-        l2CDRSelect=request.form['l2CDRSelect']
-        h3CDRSelect=request.form['h3CDRSelect']
-        l3CDRSelect=request.form['l3CDRSelect']
-        return redirect(url_for('multipleQueryCDR',h1CDRSelect=h1CDRSelect,l1CDRSelect=l1CDRSelect,h2CDRSelect=h2CDRSelect,l2CDRSelect=l2CDRSelect,h3CDRSelect=h3CDRSelect,\
-        l3CDRSelect=l3CDRSelect))
-    return render_template ('search.html')
+        else:
+            return redirect(url_for('uniqueQuery',settings='cdr_length',queryname=cdr_select))
+        
+    return render_template ('search.html', pdbListDb=pdbListDb, clusterListDb=clusterListDb, clusterChainCount=clusterChainCount, cluster_cdr_list=cluster_cdr_list)
 
 
 @app.route('/webserver', methods=['GET','POST'])
@@ -279,10 +289,11 @@ def uniqueQuery(settings,queryname):
         vl_chainid=perCDR.query.filter(perCDR.pdb.contains(queryname),perCDR.cdr.contains('L')).with_entities('chain').first()[0]
         vh_species=perCDR.query.filter(perCDR.pdb.contains(queryname),perCDR.cdr.contains('H')).with_entities('pdb_species').first()[0]
         vl_species=perCDR.query.filter(perCDR.pdb.contains(queryname),perCDR.cdr.contains('L')).with_entities('pdb_species').first()[0]
-
+        tsvFile=f'downloads/text-files/{queryname}.tab'
+        write_text_file(pdb_list,tsvFile,True)
 
         return render_template('pdbs.html',queryname=queryname,pdb_list=pdb_list,pdb_count=pdb_count,pdb_resolution=pdb_resolution,\
-                               vh_gene=vh_gene,vl_gene=vl_gene,vh_chainid=vh_chainid,vl_chainid=vl_chainid,vh_species=vh_species,vl_species=vl_species)
+                               vh_gene=vh_gene,vl_gene=vl_gene,vh_chainid=vh_chainid,vl_chainid=vl_chainid,vh_species=vh_species,vl_species=vl_species,tsvFile=tsvFile)
 
     if settings=='cluster':
         cluster_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).all()
@@ -300,7 +311,12 @@ def uniqueQuery(settings,queryname):
         gene_unique=pd.Series(names[0] for names in gene_list).unique()
         rama_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).with_entities('rama4')
         (most_common_rama_count,most_common_rama_string )=most_common_rama(rama_list)
-        return render_template('cluster.html',queryname=queryname,cluster_list=cluster_list,cluster_cdr_length=cluster_cdr_length,cluster_cdr=cluster_cdr,pdb_unique_count=pdb_unique_count,chain_count=chain_count,per_loop=per_loop,seq_unique_count=seq_unique_count,pdb_species_unique=pdb_species_unique,gene_unique=gene_unique,most_common_rama_count=most_common_rama_count,most_common_rama_string=most_common_rama_string)
+        tsvFile=f'downloads/text-files/{queryname}.tab'
+        write_text_file(cluster_list,tsvFile,True)
+        return render_template('cluster.html',queryname=queryname,cluster_list=cluster_list,cluster_cdr_length=cluster_cdr_length,\
+                               cluster_cdr=cluster_cdr,pdb_unique_count=pdb_unique_count,chain_count=chain_count,per_loop=per_loop,\
+                                   seq_unique_count=seq_unique_count,pdb_species_unique=pdb_species_unique,gene_unique=gene_unique,\
+                                       most_common_rama_count=most_common_rama_count,most_common_rama_string=most_common_rama_string,tsvFile=tsvFile)
 
     if settings=='cdr':
         cdr_list=perCDR.query.filter(perCDR.cdr.contains(queryname)).all()
@@ -311,7 +327,10 @@ def uniqueQuery(settings,queryname):
         pdb_species_unique=pd.Series(names[0] for names in pdb_species_list).unique()
         gene_list=perCDR.query.filter(perCDR.cdr.contains(queryname)).with_entities('gene')
         gene_unique=pd.Series(names[0] for names in gene_list).unique()
-        return render_template('cdr.html',queryname=queryname,cdr_list=cdr_list,pdb_unique_count=pdb_unique_count,chain_count=chain_count,pdb_species_unique=pdb_species_unique,gene_unique=gene_unique)
+        tsvFile=f'downloads/text-files/{queryname}.tab'
+        write_text_file(cdr_list,tsvFile,True)
+        return render_template('cdr.html',queryname=queryname,cdr_list=cdr_list,pdb_unique_count=pdb_unique_count,chain_count=chain_count,\
+                               pdb_species_unique=pdb_species_unique,gene_unique=gene_unique,tsvFile=tsvFile)
 
     if settings=='cdr_length':
         cdr_length_list=perCDR.query.filter(perCDR.cdr_length.contains(queryname)).all()
@@ -323,53 +342,66 @@ def uniqueQuery(settings,queryname):
         pdb_species_unique=pd.Series(names[0] for names in pdb_species_list).unique()
         gene_list=perCDR.query.filter(perCDR.cdr_length.contains(queryname)).with_entities('gene')
         gene_unique=pd.Series(names[0] for names in gene_list).unique()
-        return render_template('cdr_length.html',queryname=queryname,cdr_cdr_length=cdr_cdr_length,cdr_length_list=cdr_length_list,pdb_unique_count=pdb_unique_count,chain_count=chain_count,pdb_species_unique=pdb_species_unique,gene_unique=gene_unique)
+        tsvFile=f'downloads/text-files/{queryname}.tab'
+        write_text_file(cdr_length_list,tsvFile,True)
+        return render_template('cdr_length.html',queryname=queryname,cdr_cdr_length=cdr_cdr_length,cdr_length_list=cdr_length_list,\
+                               pdb_unique_count=pdb_unique_count,chain_count=chain_count,pdb_species_unique=pdb_species_unique,\
+                                   gene_unique=gene_unique,tsvFile=tsvFile)
 
     if settings=='germline':
         queryname=queryname.split('*')[0]
         germline_list=perVRegion.query.filter(perVRegion.vh_framework.contains(queryname)).all()
+        
         if germline_list:    #First check for VH germline and then for VL
-            return render_template('germline.html',queryname=queryname,germline_list=germline_list)
+            tsvFile=f'downloads/text-files/{queryname}.tab'
+            write_text_file(germline_list,tsvFile,False)
+            return render_template('germline.html',queryname=queryname,germline_list=germline_list,tsvFile=tsvFile)
         else:
             germline_list=perVRegion.query.filter(perVRegion.vl_framework.contains(queryname)).all()
-            return render_template('germline.html',queryname=queryname,germline_list=germline_list)
+            tsvFile=f'downloads/text-files/{queryname}.tab'
+            write_text_file(germline_list,tsvFile,False)
+            return render_template('germline.html',queryname=queryname,germline_list=germline_list,tsvFile=tsvFile)
         
     if settings=='frame_germline':
         queryname=queryname.split('*')[0]
         germline_list=perCDR.query.filter(perCDR.frame_germline.contains(queryname)).all()
+        tsvFile=f'downloads/text-files/{queryname}.tab'
+        write_text_file(germline_list,tsvFile,True)
            
-        return render_template('germline.html',queryname=queryname,germline_list=germline_list)
+        return render_template('germline.html',queryname=queryname,germline_list=germline_list,tsvFile=tsvFile)
     
     if settings=='cdr_germline':
         queryname=queryname.split('*')[0]
         germline_list=perCDR.query.filter(perCDR.cdr_germline.contains(queryname)).all()
+        tsvFile=f'downloads/text-files/{queryname}.tab'
+        write_text_file(germline_list,tsvFile,True)
            
-        return render_template('germline.html',queryname=queryname,germline_list=germline_list)
+        return render_template('germline.html',queryname=queryname,germline_list=germline_list,tsvFile=tsvFile)
             
         
 
-@app.route('/multipleQuery/<h1Select>/')
-def multipleQuery(h1Select):
-        if h1Select=='All':
-            h1Select=''    #Does not match None, so skips the rows in which h1cluster value is missing - change in future
+# @app.route('/multipleQuery/<h1Select>/')
+# def multipleQuery(h1Select):
+#         if h1Select=='All':
+#             h1Select=''    #Does not match None, so skips the rows in which h1cluster value is missing - change in future
        
 
-        #cluster_list=perCDR.query.filter(perCDR.cluster.contains(h1Select)).all()
-        queryname=h1Select
-        cluster_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).all()
-        print(f'H1select is {h1Select}')
+#         #cluster_list=perCDR.query.filter(perCDR.cluster.contains(h1Select)).all()
+#         queryname=h1Select
+#         cluster_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).all()
+#         print(f'H1select is {h1Select}')
 
-        return render_template('cluster.html',queryname=queryname,cluster_list=cluster_list)
+#         return render_template('cluster.html',queryname=queryname,cluster_list=cluster_list)
 
-@app.route('/multipleQueryCDR/<h1CDRSelect>')
-def multipleQueryCDR(h1CDRSelect):
-        if h1CDRSelect=='All':
-            h1CDRSelect=''    #Does not match None, so skips the rows in which h1cluster value is missing - change in future
+# @app.route('/multipleQueryCDR/<h1CDRSelect>')
+# def multipleQueryCDR(h1CDRSelect):
+#         if h1CDRSelect=='All':
+#             h1CDRSelect=''    #Does not match None, so skips the rows in which h1cluster value is missing - change in future
        
 
-        cluster_list=perCDR.query.filter(perCDR.h1cluster.contains(h1CDRSelect)).all()
+#         cluster_list=perCDR.query.filter(perCDR.h1cluster.contains(h1CDRSelect)).all()
 
-        return render_template('clusterquery.html',cluster_list=cluster_list)
+#         return render_template('clusterquery.html',cluster_list=cluster_list)
 
 
 if __name__ == '__main__':
