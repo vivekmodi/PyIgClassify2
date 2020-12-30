@@ -8,34 +8,82 @@
   {% block content %}
   <body>
     <div class="container-fluid">
-      <div class="row">
-        {% for fullcluster in clusterListDb %}
-        <div class="col-lg-4 col-md-4 col-sm-11 col-xs-12">
+        <div class="row">
+          <div class="col-lg-11">
+            <div class="row">
+              {% for fullcluster in clusterListDb %}
+              <div class="col-lg-6">
+                <div class="card  border-light mb-3  very-dark-text">
+                    <div class="card-header dark-background-trans"><h4 style="color:white;">{{ fullcluster }}</h4></div>
+                      <div class="card-body light-grey-background">
 
-              <div class="card  border-light bg-light mb-3">
-                  <div class="card-header light-pink-background"><h4>{{ fullcluster }}</h4>
-                    <div class="card-body">
-                        <h5 class="card-title">Number of entries: {{ entries[fullcluster] }}</h5>
-                        <h5 class="card-title">Number of chains:</h5>
-                        <h5 class="card-title">Percent of loop length:</h5>
-                        <h5 class="card-title">Median PDB Chain:</h5>
-                        <h5 class="card-title">Consensus sequence:</h5>
-                        <h5 class="card-title">Number of unique sequences:</h5>
-                        <h5 class="card-title">Species:{% for names in species_unique[fullcluster] %} {{ names }}{% endfor %}</h5>
-                        <h5 class="card-title">Genes:{% for names in gene_unique[fullcluster] %} {{ names }}{% endfor %}</h5>
-                        <h5 class="card-title">Most common Rama:</h5>
-                        <h5 class="card-title">Median angle:</h5>
-                        <h5 class="card-title">Sequence logo:</h5>
+                            <h5 class="card-title">CDR Length: <a href="#" target="_blank"></a></h5>
+                            <h5 class="card-title">CDR: <a href="#" target="_blank"></a></h5>
+                            <h5 class="card-title">Genes:</h5>
+                            <h5 class="card-title">Species:</h5>
+                            <h5 class="card-title">Sequence logo:</h5>
+                            <h5 class="card-title">Rama logo:</h5>
+                            <h5 class="card-title">Rama logo:</h5>
+                      </div>
+                  </div>
+              </div>
+
+                      <div class="col-lg-6">
+                        <table class="table table-sm  table-striped dark-accent-text">
+                          <thead class="thead-light">
+                            <tr>
+                              <th colspan="2" style='text-align:center;'>Summary</th>
+
+                            </tr>
+                          </thead>
+                          <tbody>
+                          <tr>
+                            <th scope="row" style='text-align:center;'>PDB Entries</th>
+                            <td style='text-align:center;'></td>
+                          </tr>
+                          <tr>
+                            <th scope="row" style='text-align:center;'>Chains</th>
+                            <td style='text-align:center;'></td>
+                          </tr>
+                          <tr>
+                            <th scope="row" style='text-align:center;'>Unique Sequences</th>
+                            <td style='text-align:center;'></td>
+                          </tr>
+                          <tr>
+                            <th scope="row" style='text-align:center;'>% Loop Length</th>
+                            <td style='text-align:center;'></td>
+                          </tr>
+                          <tr>
+                            <th scope="row" style='text-align:center;'>Median angle</th>
+                            <td style='text-align:center;'></td>
+                          </tr>
+                          <tr>
+                            <th scope="row" style='text-align:center;'>Median PDB Chain</th>
+                            <td style='text-align:center;'></td>
+                          </tr>
+                          <tr>
+                            <th scope="row" style='text-align:center;'>Consensus Sequence</th>
+                            <td style='text-align:center;'></td>
+                          </tr>
+                          <tr>
+                            <th scope="row" style='text-align:center;'>Most Common Rama</th>
+                            <td style='text-align:center;'></td>
+                          </tr>
+                        </tbody>
+                      </table>
 
                       </div>
+                      <div class="col-lg-12">
+                        <hr class="my-4 light-grey-background">
+
+                      </div>
+                      {% endfor %}
+
+                    </div>
                     </div>
                   </div>
+                </div>
 
-        </div>
-          {% endfor %}
-
-      </div>
-  </div>
 
 
 

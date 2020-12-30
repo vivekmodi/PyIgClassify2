@@ -215,7 +215,7 @@ def statistics():
         gene_unique[cluster]=pd.Series(names[0] for names in gene_list).unique()
 
 
-    return render_template('statistics.html',clusterListDb=natsorted(clusterListDb,key=str),entries=entries,pdb_species_unique=pdb_species_unique,gene_unique=gene_unique)
+    return render_template('statistics.html',clusterListDb=clusterListDb,entries=entries,pdb_species_unique=pdb_species_unique,gene_unique=gene_unique)
 
 @app.route('/formSearch', methods=['GET','POST'])
 def formSearch():
@@ -378,31 +378,6 @@ def uniqueQuery(settings,queryname):
            
         return render_template('germline.html',queryname=queryname,germline_list=germline_list,tsvFile=tsvFile)
             
-        
-
-# @app.route('/multipleQuery/<h1Select>/')
-# def multipleQuery(h1Select):
-#         if h1Select=='All':
-#             h1Select=''    #Does not match None, so skips the rows in which h1cluster value is missing - change in future
-       
-
-#         #cluster_list=perCDR.query.filter(perCDR.cluster.contains(h1Select)).all()
-#         queryname=h1Select
-#         cluster_list=perCDR.query.filter(perCDR.cluster.contains(queryname)).all()
-#         print(f'H1select is {h1Select}')
-
-#         return render_template('cluster.html',queryname=queryname,cluster_list=cluster_list)
-
-# @app.route('/multipleQueryCDR/<h1CDRSelect>')
-# def multipleQueryCDR(h1CDRSelect):
-#         if h1CDRSelect=='All':
-#             h1CDRSelect=''    #Does not match None, so skips the rows in which h1cluster value is missing - change in future
-       
-
-#         cluster_list=perCDR.query.filter(perCDR.h1cluster.contains(h1CDRSelect)).all()
-
-#         return render_template('clusterquery.html',cluster_list=cluster_list)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
